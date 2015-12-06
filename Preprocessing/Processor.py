@@ -2,21 +2,19 @@ import json
 import time
 from urllib.request import urlopen
 from collections import OrderedDict
+from pygeocoder import Geocoder
 
+
+key = 'AIzaSyBoE88Q3q-ddna-0bm7GKqH_dcw6NDF'
 
 #lookup country by latitude and longitude utilizes google api
 def lookup(lat, lon):
-        url = "http://maps.googleapis.com/maps/api/geocode/json?"
-        url += "latlng=%s,%s&sensor=false" % (lat, lon)
-        geturl = urlopen(url).read()
-        data = json.loads(geturl.decode())
+        results = Geocoder(key).reverse_geocode(lat,lon)
+        return results.country
 
-        for result in data['results']:
-                for component in result['address_components']:
-                        if 'country' in component['types']:
-                                return component['long_name']
+lastkey = input('Enter in the last part of the key:')
+key = key + lastkey
 
-        return None
 
 jsonList = []
 
@@ -49,7 +47,10 @@ for elements in jsonList:
     print(country)
 
     if latitude == "" or longitude == "" or country == None:
-        jsonList.remove(elements)
+         try:
+            jsonList.remove(elements)
+         except ValueError:
+            pass
 
 
     #tag parsing
@@ -59,17 +60,26 @@ for elements in jsonList:
         tags.append(tag.get('tag'))
     tags = tags + elements.get('userTags')
     if len(tags) == 0:
-        jsonList.remove(elements)
+         try:
+            jsonList.remove(elements)
+         except ValueError:
+            pass
 
     #title parsing
     title = elements.get('title')
     if title == '':
-        jsonList.remove(elements)
+         try:
+            jsonList.remove(elements)
+         except ValueError:
+            pass
 
     #get user name
     user = elements.get('user').get('nickname')
     if user == '':
-        jsonList.remove(elements)
+         try:
+            jsonList.remove(elements)
+         except ValueError:
+            pass
 
     #get favorites
     favorites = elements.get('favorites')
@@ -93,13 +103,13 @@ for elements in jsonList:
     temp = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime(datetaken))
     elements['dateTaken'] = temp
 
-file = open('updatedJSON.json', 'w')
+file = open('updatedJSONV2.json', 'w')
 file.write("[")
 
 for i in range (0, len(jsonList)):
     temp = json.dumps(jsonList[i])
     if i != (len(jsonList)-1):
-        file.write(temp + ",")
+        file.write(temp + "\n")
     else:
         file.write(temp)
 file.write("]")
