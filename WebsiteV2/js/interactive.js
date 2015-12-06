@@ -1,4 +1,4 @@
-// Code for an interactive bubble visualization in D3.
+// Code for an interactive bubble visualization in D3.js
 
 function main() {
   var svg = d3.select('#visualization').append('svg');
@@ -14,6 +14,7 @@ function main() {
     var lines = content.trim().split('\n');
     var users = lines.map(function(line) {
       try {
+        var temp = JSON.parse(line);
         return JSON.parse(line);
       } catch (error) {
         console.warn("Cannot parse line: " + line);
@@ -30,9 +31,9 @@ function main() {
 
     function fill(d, i) {
       if (d.isRoot) {
-        return 'none';
+        return '#01A2A6';
       } else {
-        return palette(i);
+        return '#bdf271';
       }
     }
 
@@ -103,6 +104,7 @@ function main() {
       var node = svg.selectAll('.node').data(laidOut);
 
       // deal with newly created nodes:
+  
 
       var g = node.enter().append('g').classed('node', true); // note 'enter()'
       g.attr('transform', translate);
@@ -113,6 +115,9 @@ function main() {
       g.on('mouseenter', mouseEnter);
       g.on('mouseleave', mouseLeave);
       g.on('click', click);
+
+      var image = g.append('image');
+      image.attr("xlink:href", function(d,i){return "https://www.petfinder.com/wp-content/uploads/2012/11/101438745-cat-conjunctivitis-causes.jpg"})
 
       var text = g.append('text');
       text.text(nodeText);

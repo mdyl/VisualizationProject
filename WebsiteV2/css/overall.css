@@ -1,6 +1,6 @@
 body {
   padding-top: 50px;
-  background-color: rgba(25,163,166,1);
+  background-color: #2f2933;
 }
 .starter-template {
   padding: 40px 15px;
@@ -20,6 +20,18 @@ body {
     transition: all .4s ease 0s;
     height: 100%
 }
+#sidebar-wrapper:hover {
+    margin-left: -75px;
+    margin-top: 11px;
+    left: 70px;
+    width: 150px;
+    background: rgba(67,107,111,1);
+    position: fixed;
+    height: 100%;
+    z-index: 10000;
+    opacity: 1;
+    transition: all .4s ease 0s;
+}
 
 #sidebar-wrapper {
     margin-left: -75px;
@@ -30,6 +42,7 @@ body {
     position: fixed;
     height: 100%;
     z-index: 10000;
+    opacity: 0;
     transition: all .4s ease 0s;
 }
 
@@ -163,3 +176,45 @@ body {
     color: white;
 
 }
+
+
+
+#custom-search-input {
+        margin:0;
+        margin-top: 10px;
+        padding: 0;
+    }
+ 
+    #custom-search-input .search-query {
+        padding-right: 3px;
+        padding-right: 4px \9;
+        padding-left: 3px;
+        padding-left: 4px \9;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+ 
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+ 
+    #custom-search-input button {
+        border: 0;
+        background: none;
+        /** belows styles are working good */
+        padding: 2px 5px;
+        margin-top: 2px;
+        position: relative;
+        left: -28px;
+        /* IE7-8 doesn't have border-radius, so don't indent the padding */
+        margin-bottom: 0;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        color:#D9230F;
+    }
+ 
+    .search-query:focus + button {
+        z-index: 3;   
+    }
+
