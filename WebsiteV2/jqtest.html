@@ -31,12 +31,16 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <!--Interactive Script-->
+    <!-- JQuery hosted by google -->s
+    <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    </head>
 
   </head>
 
   <body>
 
+  <!--TOP NAVIGATION BAR -->
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -55,22 +59,30 @@
       </div>
     </nav>
 
-
+    <!--SideBar Navigation-->
     <div id="sidebar-wrapper">
       <ul id="sidebar_menu" class="sidebar-nav">
         <div class="navbar-header">
           <p class="sidebar_title">Discover</p>
+          <!--
           <div class="input-group col-md-12">
-                                <input type="text" id="nicknameSearch" class="  search-query form-control" placeholder="Search" />
+                                <input type="text" class="  search-query form-control" placeholder="Search" />
                                 <span class="input-group-btn">
-                                    <button class="btn btn-danger" id="nicknameButton" type="button">
+                                    <button class="btn btn-danger" type="button">
                                         <span class=" glyphicon glyphicon-search"></span>
                                     </button>
                                 </span>
-          </div>
+                            </div>
         </div>
+        -->
+        <form role="form">
+             <div class="form-group">
+                <input type="email" class="form-control input-lg" id="search" placeholder="Sart type 'a' ....">
+             </div>
+        </form>
       </ul>
     </div>
+
 
     <div class="container">
 
@@ -78,12 +90,9 @@
           <div id="visualization">
           </div>
 
-
           <!-- put the script tag at the end of the document, so that it gets executed
          after the rest of the page is loaded -->
-
-         <script type="text/javascript" type="text/javascript"src="js/interactive.js" charset="utf-8"></script>
-
+         <script src="js/interactive.js" charset="utf-8"></script>
       </div>
 
     </div><!-- /.container -->
