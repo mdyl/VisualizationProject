@@ -76,6 +76,44 @@ function main() {
       }
     }
 
+   
+
+  //testing search function
+    function getObjects(obj, key, val) {
+        var objects = [];
+        for (var i in obj) {         
+            if (!obj.hasOwnProperty(i)) continue;
+            if (typeof obj[i] == 'object') {
+                objects = objects.concat(getObjects(obj[i], key, val));
+            } else if (i == key && obj[key] == val) {
+                objects.push(obj);
+            }
+        }
+    
+        return objects;
+    }
+
+ // document.getElementById("nicknameButton").addEventListener("click", search);
+
+  function search(){
+      var val = document.getElementById("nicknameSearch").value;
+      console.log(users);
+      console.log(getObjects(users,'nickname','North America'));
+      //changeRoot('nickname', val);
+
+  }
+
+  d3.select('#nicknameButton').on('click', function () {
+     var val = document.getElementById("nicknameSearch").value;
+      console.log(users);
+
+      console.log(getObjects(users,'nickname','North America'));
+    });
+
+
+
+    console.log(getObjects(users,'nickname','North America'));
+
     var palette = d3.scale.category20();
 
     var bubbleLayout = d3.layout.pack().size([800, 800]).sort(null).padding(5);
@@ -91,10 +129,16 @@ function main() {
         return user.following.length;
       }
     });
+
     var root = {
       isRoot: true,
       children: users,
     };
+
+    function changeRoot(key, val){
+       console.log('original root' + root.children);
+       root.children = getObjects(users, key, val);
+    }
 
     function update() {
       // everytime update() is called, we (re)compute the layout, using the
@@ -104,8 +148,6 @@ function main() {
       var node = svg.selectAll('.node').data(laidOut);
 
       // deal with newly created nodes:
-  
-
       var g = node.enter().append('g').classed('node', true); // note 'enter()'
       g.attr('transform', translate);
 
