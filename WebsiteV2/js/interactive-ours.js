@@ -5,14 +5,14 @@ function main() {
   svg.attr('width', 800);
   svg.attr('height', 800);
 
-  d3.text('Resources/flickr-20users', function(err, content) {
+  d3.text('Resources/updatedJSONV2.json', function(err, content) {
     if (err) {
       console.error(err);
       return;
     }
 
     var lines = content.trim().split('\n');
-    var users = lines.map(function(line) {
+    var photos = lines.map(function(line) {
       try {
         var temp = JSON.parse(line);
         return JSON.parse(line);
@@ -20,7 +20,7 @@ function main() {
         console.warn("Cannot parse line: " + line);
       }
     });
-    console.log(users);
+    console.log(photos);
 
     // a bunch of helper functions that are used by D3 to compute attribute
     // values, or to call back when events happen
@@ -40,7 +40,7 @@ function main() {
     function nodeText(d) {
       if (!d.isRoot) {
         if (d.isActive) {
-          return d.title;
+          return d.nickname;
         }
         return d.favorites.length;
       }
@@ -89,7 +89,7 @@ function main() {
                 objects.push(obj);
             }
         }
-      }
+    
         return objects;
     }
 
@@ -97,22 +97,22 @@ function main() {
 
   function search(){
       var val = document.getElementById("nicknameSearch").value;
-      console.log(users);
-      console.log(getObjects(users,'nickname','North America'));
+      console.log(photos);
+      console.log(getObjects(photos,'continent','North America'));
       //changeRoot('nickname', val);
 
   }
 
   d3.select('#nicknameButton').on('click', function () {
      var val = document.getElementById("nicknameSearch").value;
-      console.log(users);
+      console.log(photos);
 
-      console.log(getObjects(users,'nickname','North America'));
+      console.log(getObjects(photos,'continent','North America'));
     });
 
 
 
-    console.log(getObjects(users,'nickname','North America'));
+    console.log(getObjects(photos,'continent','North America'));
 
     var palette = d3.scale.category20();
 
@@ -124,20 +124,20 @@ function main() {
         //
         // **we change the value instead of just scaling the <circle> element
         // because we want D3 to recompute the layout.**
-        return user.following.length * 3;
+        return user.favorites.length * 3;
       } else {
-        return user.following.length;
+        return user.favorites.length;
       }
     });
 
     var root = {
       isRoot: true,
-      children: users,
+      children: photos,
     };
 
     function changeRoot(key, val){
        console.log('original root' + root.children);
-       root.children = getObjects(users, key, val);
+       root.children = getObjects(photos, key, val);
     }
 
     function update() {
