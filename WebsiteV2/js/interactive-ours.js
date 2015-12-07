@@ -40,7 +40,7 @@ function main() {
     function nodeText(d) {
       if (!d.isRoot) {
         if (d.isActive) {
-          return d.nickname;
+          return d.title;
         }
         return d.favorites.length;
       }
@@ -72,7 +72,7 @@ function main() {
 
     function click(d) {
       if (d.id) {
-        window.open('https://flickr.com/' + d.id, '_blank');
+        window.open(d.downloadUrl);
       }
     }
 
@@ -110,9 +110,57 @@ function main() {
       console.log(getObjects(photos,'continent','North America'));
     });
 
+//CONTINENT SEARCH : puts the json into arrays by contienent ------------------------------------------------> 
+        var northAmericaPhotos = photos.filter(function (row) {
+          if(row.continent == 'North America' && row.favorites.length != 0) {
+            return true;
+          } else {
+            return false;
+          }
+        });
 
+        var southAmericaPhotos = photos.filter(function (row) {
+          if(row.continent == 'South America' && row.favorites.length != 0) {
+            return true;
+          } else {
+            return false;
+          }
+        });
 
-    console.log(getObjects(photos,'continent','North America'));
+        var europePhotos = photos.filter(function (row) {
+          if(row.continent == 'Europe' && row.favorites.length != 0) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        var asiaPhotos = photos.filter(function (row) {
+          if(row.continent == 'Asia' && row.favorites.length != 0) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        var africaPhotos = photos.filter(function (row) {
+          if(row.continent == 'Africa' && row.favorites.length != 0) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        var AustraliaPhotos = photos.filter(function (row) {
+          if(row.continent == 'Australia' && row.favorites.length != 0) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+//-------------------------------------->
+
+   // console.log(getObjects(photos,'continent','South America'));
 
     var palette = d3.scale.category20();
 
@@ -132,7 +180,7 @@ function main() {
 
     var root = {
       isRoot: true,
-      children: photos,
+      children: northAmericaPhotos,
     };
 
     function changeRoot(key, val){
