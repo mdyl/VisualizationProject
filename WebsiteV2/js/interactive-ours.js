@@ -33,7 +33,8 @@ function main() {
       if (d.isRoot) {
         return '#01A2A6';
       } else {
-        return '#bdf271';
+        //return '#bdf271';
+        return 'url(#'+d.id+"-icon"+')';
       }
     }
 
@@ -152,7 +153,7 @@ function main() {
         });
 
         var AustraliaPhotos = photos.filter(function (row) {
-          if(row.continent == 'Australia' && row.favorites.length != 0) {
+          if(row.continent == 'Oceana' && row.favorites.length != 0) {
             return true;
           } else {
             return false;
@@ -165,16 +166,16 @@ function main() {
     var palette = d3.scale.category20();
 
     var bubbleLayout = d3.layout.pack().size([800, 800]).sort(null).padding(5);
-    bubbleLayout.value(function(user) {
-      if (user.isActive) {
+    bubbleLayout.value(function(photo) {
+      if (photo.isActive) {
         // when the data record is active (hovered over), we return a value
         // triple its actual value, to make it larger.
         //
         // **we change the value instead of just scaling the <circle> element
         // because we want D3 to recompute the layout.**
-        return user.favorites.length * 3;
+        return photo.favorites.length * 3;
       } else {
-        return user.favorites.length;
+        return photo.favorites.length;
       }
     });
 
@@ -199,15 +200,38 @@ function main() {
       var g = node.enter().append('g').classed('node', true); // note 'enter()'
       g.attr('transform', translate);
 
-      var circle = g.append('circle');
+//~~~~~~~~~~~~~~~~~~
+      var defs = g.append('defs')
+
+      var pattern = defs.append('pattern')
+                              pattern.attr("id",  function(d) { return (d.id+"-icon");});
+                              pattern.attr("height", 1);
+                              pattern.attr("width", 1);
+                              pattern.attr('patternContentUnits', 'objectBoundingBox');
+      var bg = pattern.append('image');
+           bg.attr("xlink:href",  function(d) { return d.downloadUrl; });
+           bg.attr("x", 0);
+           bg.attr("y", 0);
+           bg.attr("height", 1);
+           bg.attr("width", 1);
+           bg.attr("preserveAspectRatio", "xMinYMin slice");
+
+
+
+//~~~~~~~~~~~
+
+      var circle = g.append('svg:circle');
       circle.attr('r', function(d) { return d.r; });
+      //circle.classed('node', true)
       circle.style('fill', fill);
+
+
       g.on('mouseenter', mouseEnter);
       g.on('mouseleave', mouseLeave);
       g.on('click', click);
 
-      var image = g.append('image');
-      image.attr("xlink:href", function(d,i){return "https://www.petfinder.com/wp-content/uploads/2012/11/101438745-cat-conjunctivitis-causes.jpg"})
+    //  var image = g.append('image');
+    //  image.attr("xlink:href", function(d,i){  return d.downloadUrl; })
 
       var text = g.append('text');
       text.text(nodeText);
@@ -221,7 +245,10 @@ function main() {
       var transition = node.transition().duration(1000); // operate on all nodes
       transition.attr('transform', translate);
       transition.select('circle').attr('r', function(d) { return d.r; });
+      //transition.select('circle').style('fill', fill);
       transition.select('text').attr('font-size', fontSize).text(nodeText);
+;
+
 
       // if some nodes are removed, you can use node.exit() to get a placeholder
       // to operate on them
