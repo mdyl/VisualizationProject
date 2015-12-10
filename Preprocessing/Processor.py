@@ -12,7 +12,9 @@ key = 'AIzaSyChY_02V3gWYfzI0O0qBkjozaBSsuh25'
 def lookupCountry(lat, lon):
     try:
         results = Geocoder(key).reverse_geocode(lat,lon)
-        return results.country
+        if results.administrative_area_level_1 == None:
+            return None
+        return {'country' : results.country, 'state' : results.administrative_area_level_1}
     except GeocoderError:
         return None
 
@@ -51,7 +53,8 @@ def lookupContinent(country):
         {'timezones': ['Africa/Abidjan'], 'code': 'CI', 'continent': 'Africa', 'name': "C\xc3\xb4te d'Ivoire", 'capital': 'Yamoussoukro'},
         {'timezones': ['America/Santiago', 'Pacific/Easter'], 'code': 'CL', 'continent': 'South America', 'name': 'Chile', 'capital': 'Santiago'},
         {'timezones': ['Africa/Douala'], 'code': 'CM', 'continent': 'Africa', 'name': 'Cameroon', 'capital': 'Yaound\xc3\xa9'},
-        {'timezones': ['Asia/Shanghai', 'Asia/Harbin', 'Asia/Chongqing', 'Asia/Urumqi', 'Asia/Kashgar'], 'code': 'CN', 'continent': 'Asia', 'name': "People's Republic of China", 'capital': 'Beijing'},
+        {'timezones': ['Asia/Shanghai', 'Asia/Harbin', 'Asia/Chongqing', 'Asia/Urumqi', 'Asia/Kashgar'], 'code': 'HKG', 'continent': 'Asia', 'name': "Hong Kong", 'capital': 'Hong Kong'},
+        {'timezones': ['Asia/Shanghai', 'Asia/Harbin', 'Asia/Chongqing', 'Asia/Urumqi', 'Asia/Kashgar'], 'code': 'CN', 'continent': 'Asia', 'name': "China", 'capital': 'Beijing'},
         {'timezones': ['America/Bogota'], 'code': 'CO', 'continent': 'South America', 'name': 'Colombia', 'capital': 'Bogot\xc3\xa1'},
         {'timezones': ['America/Costa_Rica'], 'code': 'CR', 'continent': 'North America', 'name': 'Costa Rica', 'capital': 'San Jos\xc3\xa9'},
         {'timezones': ['America/Havana'], 'code': 'CU', 'continent': 'North America', 'name': 'Cuba', 'capital': 'Havana'},
@@ -84,7 +87,8 @@ def lookupContinent(country):
         {'timezones': ['America/Tegucigalpa'], 'code': 'HN', 'continent': 'North America', 'name': 'Honduras', 'capital': 'Tegucigalpa'},
         {'timezones': ['Europe/Budapest'], 'code': 'HU', 'continent': 'Europe', 'name': 'Hungary', 'capital': 'Budapest'},
         {'timezones': ['Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura'], 'code': 'ID', 'continent': 'Asia', 'name': 'Indonesia', 'capital': 'Jakarta'},
-        {'timezones': ['Europe/Dublin'], 'code': 'IE', 'continent': 'Europe', 'name': 'Republic of Ireland', 'capital': 'Dublin'},
+        {'timezones': ['Europe/Dublin'], 'code': 'IE', 'continent': 'Europe', 'name': 'Ireland', 'capital': 'Dublin'},
+        {'timezones': ['Europe/Dublin'], 'code': 'JEY', 'continent': 'Europe', 'name': 'Jersey', 'capital': 'Saint Helier'},
         {'timezones': ['Asia/Jerusalem'], 'code': 'IL', 'continent': 'Asia', 'name': 'Israel', 'capital': 'Jerusalem'},
         {'timezones': ['Asia/Calcutta'], 'code': 'IN', 'continent': 'Asia', 'name': 'India', 'capital': 'New Delhi'},
         {'timezones': ['Asia/Baghdad'], 'code': 'IQ', 'continent': 'Asia', 'name': 'Iraq', 'capital': 'Baghdad'},
@@ -93,6 +97,7 @@ def lookupContinent(country):
         {'timezones': ['Europe/Rome'], 'code': 'IT', 'continent': 'Europe', 'name': 'Italy', 'capital': 'Rome'},
         {'timezones': ['America/Jamaica'], 'code': 'JM', 'continent': 'North America', 'name': 'Jamaica', 'capital': 'Kingston'},
         {'timezones': ['Asia/Amman'], 'code': 'JO', 'continent': 'Asia', 'name': 'Jordan', 'capital': 'Amman'},
+        {'timezones': ['Asia/Amman'], 'code': 'TWN', 'continent': 'Asia', 'name': 'Taiwan', 'capital': 'Taipei'},
         {'timezones': ['Asia/Tokyo'], 'code': 'JP', 'continent': 'Asia', 'name': 'Japan', 'capital': 'Tokyo'},
         {'timezones': ['Africa/Nairobi'], 'code': 'KE', 'continent': 'Africa', 'name': 'Kenya', 'capital': 'Nairobi'},
         {'timezones': ['Asia/Bishkek'], 'code': 'KG', 'continent': 'Asia', 'name': 'Kyrgyzstan', 'capital': 'Bishkek'},
@@ -126,7 +131,7 @@ def lookupContinent(country):
         {'timezones': ['Africa/Niamey'], 'code': 'NE', 'continent': 'Africa', 'name': 'Niger', 'capital': 'Niamey'},
         {'timezones': ['Africa/Lagos'], 'code': 'NG', 'continent': 'Africa', 'name': 'Nigeria', 'capital': 'Abuja'},
         {'timezones': ['America/Managua'], 'code': 'NI', 'continent': 'North America', 'name': 'Nicaragua', 'capital': 'Managua'},
-        {'timezones': ['Europe/Amsterdam'], 'code': 'NL', 'continent': 'Europe', 'name': 'Kingdom of the Netherlands', 'capital': 'Amsterdam'},
+        {'timezones': ['Europe/Amsterdam'], 'code': 'NL', 'continent': 'Europe', 'name': 'Netherlands', 'capital': 'Amsterdam'},
         {'timezones': ['Europe/Oslo'], 'code': 'NO', 'continent': 'Europe', 'name': 'Norway', 'capital': 'Oslo'},
         {'timezones': ['Asia/Katmandu'], 'code': 'NP', 'continent': 'Asia', 'name': 'Nepal', 'capital': 'Kathmandu'},
         {'timezones': ['Pacific/Nauru'], 'code': 'NR', 'continent': 'Oceania', 'name': 'Nauru', 'capital': 'Yaren'},
@@ -274,11 +279,13 @@ def parseElem(elements):
 
     #get favorites
     favorites = elements.get('favorites')
-    if len(favorites) == 0:
+    if favorites == "[]":
         try:
             jsonList.remove(elements)
         except ValueError:
             pass
+    else:
+        elements['favorites'] = len(favorites)
 
     #get description
     description = elements.get('description')
@@ -298,12 +305,14 @@ def parseElem(elements):
     latitude = elements.get('geo').get('latitude')
     longitude = elements.get('geo').get('longtitude')
     country = lookupCountry(latitude, longitude)
-    continent = lookupContinent(country)
-    elements['country'] = country
-    elements['continent'] = continent
-    print(country)
+    if country != None:
+        continent = lookupContinent(country.get('country'))
+        elements['state'] = country.get('state')
+        elements['country'] = country.get('country')
+        elements['continent'] = continent
+        print(country.get('state'))
 
-    if latitude == "" or longitude == "" or country == None:
+    if latitude == "" or longitude == "" or country == None or continent == None:
          try:
             jsonList.remove(elements)
          except ValueError:
