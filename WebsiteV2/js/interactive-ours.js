@@ -7,7 +7,7 @@ function main() {
 
 
 
-  d3.text('Resources/updatedJSONV2.json', function(err, content) {
+  d3.text('Resources/updatedJSONV3.json', function(err, content) {
     if (err) {
       console.error(err);
       return;
@@ -21,6 +21,8 @@ function main() {
       } catch (error) {
         console.warn("Cannot parse line: " + line);
       }
+
+
     });
   
     // a bunch of helper functions that are used by D3 to compute attribute
@@ -154,9 +156,9 @@ function main() {
             return false;
           }
         });
-        northAmericaPhotos.sort(function(a, b) {
+        /*northAmericaPhotos.sort(function(a, b) {
           return (b.favorites) - (a.favorites);
-        });
+        });*/
         photosByCont.push(northAmericaPhotos);
 
         var southAmericaPhotos = photos.filter(function (row) {
@@ -166,9 +168,9 @@ function main() {
             return false;
           }
         });
-         southAmericaPhotos.sort(function(a, b) {
+       /*  southAmericaPhotos.sort(function(a, b) {
           return (b.favorites) - (a.favorites);
-        });
+        });*/
         photosByCont.push(southAmericaPhotos);
 
         var europePhotos = photos.filter(function (row) {
@@ -178,9 +180,9 @@ function main() {
             return false;
           }
         });
-          europePhotos.sort(function(a, b) {
+   /*       europePhotos.sort(function(a, b) {
           return (b.favorites) - (a.favorites);
-        });
+        }); */
           photosByCont.push(europePhotos);
 
         var asiaPhotos = photos.filter(function (row) {
@@ -190,9 +192,9 @@ function main() {
             return false;
           }
         });
-        asiaPhotos.sort(function(a, b) {
+     /*   asiaPhotos.sort(function(a, b) {
           return (b.favorites) - (a.favorites);
-        });
+        }); */
         photosByCont.push(asiaPhotos);
 
         var africaPhotos = photos.filter(function (row) {
@@ -202,9 +204,9 @@ function main() {
             return false;
           }
         });
-           africaPhotos.sort(function(a, b) {
-          return (b.favorites) - (a.favorites);
-        });
+   /*        africaPhotos.sort(function(a, b) {
+           return (b.favorites) - (a.favorites);
+        }); */
           photosByCont.push(africaPhotos);
 
         var oceaniaPhotos = photos.filter(function (row) {
@@ -214,9 +216,9 @@ function main() {
             return false;
           }
         });
-        oceaniaPhotos.sort(function(a, b) {
+   /*     oceaniaPhotos.sort(function(a, b) {
           return (b.favorites) - (a.favorites);
-        });
+        });*/
         photosByCont.push(oceaniaPhotos);
 //-------------------------------------->
   
