@@ -5,6 +5,8 @@ function main() {
   svg.attr('width', 800);
   svg.attr('height', 800);
 
+
+
   d3.text('Resources/updatedJSONV2.json', function(err, content) {
     if (err) {
       console.error(err);
@@ -20,8 +22,7 @@ function main() {
         console.warn("Cannot parse line: " + line);
       }
     });
-    console.log(photos);
-
+  
     // a bunch of helper functions that are used by D3 to compute attribute
     // values, or to call back when events happen
 
@@ -43,7 +44,7 @@ function main() {
         if (d.isActive) {
           return d.title;
         }
-        return d.favorites.length;
+        return Number(d.favorites);
       }
     }
 
@@ -77,15 +78,47 @@ function main() {
       }
     }
 
-   
+   function searchKey(photoset,value){
+       for (var i in photoset) {  
+          if(photoset[i].userTag == value){
+            return photoset[i];
+          }
+       }
+       return false; //if there is no photo for that key
+   }
+
+
+  function setRoot(fav){
+    root.children = fav;
+   }
+
+
+   function searchSets(value){
+      newPhotoSets = [];
+      for (var i in photosByCont){
+        topPhoto = searchKey(photosByCont[i],value);
+        if(topPhoto != false){ //so only countrys that have a photo are returned
+         newPhotoSets.push(topPhoto);
+        }
+      }
+      return newPhotoSets;
+   }
+
+   //function searchDate()
+   //function searchKey()
+
+  
 
   //testing search function
     function getObjects(obj, key, val) {
         var objects = [];
-        for (var i in obj) {         
+        for (var i in obj) {  
+          //  console.log("LENGTH" + obj.length);
+       
             if (!obj.hasOwnProperty(i)) continue;
             if (typeof obj[i] == 'object') {
                 objects = objects.concat(getObjects(obj[i], key, val));
+                // console.log("SUCCESS");
             } else if (i == key && obj[key] == val) {
                 objects.push(obj);
             }
@@ -96,72 +129,98 @@ function main() {
 
  // document.getElementById("nicknameButton").addEventListener("click", search);
 
-  function search(){
-      var val = document.getElementById("nicknameSearch").value;
-      console.log(photos);
-      console.log(getObjects(photos,'continent','North America'));
-      //changeRoot('nickname', val);
 
-  }
 
-  d3.select('#nicknameButton').on('click', function () {
-     var val = document.getElementById("nicknameSearch").value;
-      console.log(photos);
+  d3.select('#tagButton').on('click', function () {
+     var val = document.getElementById("tagSearch").value;
 
-      console.log(getObjects(photos,'continent','North America'));
+     //new photos to populate the screen
+
+       newNodes = searchSets("dog");
+       setRoot(newNodes);
+
+     
     });
 
+
+
+
 //CONTINENT SEARCH : puts the json into arrays by contienent ------------------------------------------------> 
+        var photosByCont = [];
         var northAmericaPhotos = photos.filter(function (row) {
-          if(row.continent == 'North America' && row.favorites.length != 0) {
+          if(row.continent == 'North America') {
             return true;
           } else {
             return false;
           }
         });
+        northAmericaPhotos.sort(function(a, b) {
+          return (b.favorites) - (a.favorites);
+        });
+        photosByCont.push(northAmericaPhotos);
 
         var southAmericaPhotos = photos.filter(function (row) {
-          if(row.continent == 'South America' && row.favorites.length != 0) {
+          if(row.continent == 'South America') {
             return true;
           } else {
             return false;
           }
         });
+         southAmericaPhotos.sort(function(a, b) {
+          return (b.favorites) - (a.favorites);
+        });
+        photosByCont.push(southAmericaPhotos);
 
         var europePhotos = photos.filter(function (row) {
-          if(row.continent == 'Europe' && row.favorites.length != 0) {
+          if(row.continent == 'Europe') {
             return true;
           } else {
             return false;
           }
         });
+          europePhotos.sort(function(a, b) {
+          return (b.favorites) - (a.favorites);
+        });
+          photosByCont.push(europePhotos);
 
         var asiaPhotos = photos.filter(function (row) {
-          if(row.continent == 'Asia' && row.favorites.length != 0) {
+          if(row.continent == 'Asia') {
             return true;
           } else {
             return false;
           }
         });
+        asiaPhotos.sort(function(a, b) {
+          return (b.favorites) - (a.favorites);
+        });
+        photosByCont.push(asiaPhotos);
 
         var africaPhotos = photos.filter(function (row) {
-          if(row.continent == 'Africa' && row.favorites.length != 0) {
+          if(row.continent == 'Africa') {
             return true;
           } else {
             return false;
           }
         });
+           africaPhotos.sort(function(a, b) {
+          return (b.favorites) - (a.favorites);
+        });
+          photosByCont.push(africaPhotos);
 
-        var AustraliaPhotos = photos.filter(function (row) {
-          if(row.continent == 'Oceana' && row.favorites.length != 0) {
+        var oceaniaPhotos = photos.filter(function (row) {
+          if(row.continent == 'Oceania') {
             return true;
           } else {
             return false;
           }
         });
+        oceaniaPhotos.sort(function(a, b) {
+          return (b.favorites) - (a.favorites);
+        });
+        photosByCont.push(oceaniaPhotos);
 //-------------------------------------->
+  
 
-   // console.log(getObjects(photos,'continent','South America'));
 
     var palette = d3.scale.category20();
 
@@ -173,21 +232,18 @@ function main() {
         //
         // **we change the value instead of just scaling the <circle> element
         // because we want D3 to recompute the layout.**
-        return photo.favorites.length * 3;
+        return ((Number(photo.favorites)+1) * 3);
       } else {
-        return photo.favorites.length;
+        return (Number(photo.favorites)+1);
       }
     });
 
     var root = {
       isRoot: true,
-      children: northAmericaPhotos,
+      children: [northAmericaPhotos[0], southAmericaPhotos[0], europePhotos[0], asiaPhotos[0], africaPhotos[0], oceaniaPhotos[0]],
     };
 
-    function changeRoot(key, val){
-       console.log('original root' + root.children);
-       root.children = getObjects(photos, key, val);
-    }
+
 
     function update() {
       // everytime update() is called, we (re)compute the layout, using the
@@ -198,6 +254,8 @@ function main() {
 
       // deal with newly created nodes:
       var g = node.enter().append('g').classed('node', true); // note 'enter()'
+            console.log("X: " + g.x + " Y:" + g.y);
+
       g.attr('transform', translate);
 
 //~~~~~~~~~~~~~~~~~~
@@ -240,6 +298,7 @@ function main() {
       text.attr('text-anchor', 'middle');
       text.attr('dominant-baseline', 'middle');
 
+
       // deal with existing nodes:
 
       var transition = node.transition().duration(1000); // operate on all nodes
@@ -252,6 +311,9 @@ function main() {
 
       // if some nodes are removed, you can use node.exit() to get a placeholder
       // to operate on them
+        node.exit().remove();
+
+
     }
 
     update(); // on initial page loading, use update() to show the visualization
