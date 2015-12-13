@@ -169,31 +169,42 @@ function main() {
       switch(d.continent){
         case "Asia":
           workingSet.currentRoot = asiaCountries;
+                    changeSet();
+          update();
           break;
 
         case "North America":
           workingSet.currentRoot = northAmericanCountries;
+                    changeSet();
+          update();
           break;
 
         case "Europe":
           workingSet.currentRoot = europeCountries;
+                    changeSet();
+          update();
           break;
 
         case "Oceania":
           workingSet.currentRoot = oceaniaCountries;
+                    changeSet();
+          update();
           break;
 
         case "Africa":
           workingSet.currentRoot = africaCountries;
+                    changeSet();
+          update();
           break;
 
         case "South America":
          // setRoot(southAmericaPhotos.slice(1 * increment,10 * increment));
           workingSet.currentRoot = southAmericanCountries;
+                    changeSet();
+          update();
           break;
       }
-          changeSet();
-          update();
+
     }
 
     function getTop(){
@@ -451,14 +462,13 @@ function main() {
 
 
       // deal with existing nodes:
-
       var transition = node.transition().duration(1000); // operate on all nodes
       transition.attr('transform', translate);
       transition.select('circle').attr('r', function(d) { return d.r; });
-      node.select('pattern').attr("id",  function(d) { return (d.id+"-icon");}
-                            .attr('patternContentUnits', 'objectBoundingBox') ); //update photo id
-      node.select('image').attr("xlink:href",  function(d) { return d.downloadUrl; }
-                          .attr("preserveAspectRatio", "xMinYMin slice") ); //update photo url
+      node.select('pattern').attr("id",  function(d) { return (d.id+"-icon");} )
+                            .attr('patternContentUnits', 'objectBoundingBox') ; //update photo id
+      node.select('image').attr("xlink:href",  function(d) { return d.downloadUrl; } )
+                             .attr("preserveAspectRatio", "xMinYMin slice") ; //update photo url
       node.select('circle').style('fill', fill); //update background
       transition.select('text').attr('font-size', fontSize).text(nodeText);
 ;
