@@ -220,7 +220,8 @@ body {
 
     div.tooltip { 
     position: absolute;     
-    text-align: center;     
+    text-align: center;  
+    display: inline-block;   
     width: 200px;          
     height: 100px;         
     padding: 2px;       
