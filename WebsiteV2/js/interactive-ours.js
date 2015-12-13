@@ -114,7 +114,7 @@ function main() {
         div.transition()        
                 .duration(200)      
                 .style("opacity", .9);      
-            div .html(d.title + "<br/>" + d.user.nickname + "<br/>" + d.dateTaken + "<br/>"  + d.description)  
+            div .html("<b>Title:</b> " + d.title + "<br/>" + "<b>User:</b> " + d.user.nickname + "<br/>" + "<b>Date:</b> " + d.dateTaken + "<br/>"  + "<b>Description:</b> " + d.description)  
                 .style("left", (d3.event.pageX) + "px")     
                 .style("top", (d3.event.pageY - 28) + "px");   
         update();
@@ -315,7 +315,7 @@ function main() {
         });*/
         console.log(northAmericaPhotos.length);
        northAmericanContries = sortContinents(northAmericaPhotos);
-       currentRoot = northAmericanContries;
+      
        // console.log(northAmericanContries);
 
         na.push(naCountries);
