@@ -132,11 +132,36 @@ function main() {
     }
 
     function worldButton(){
-      root = {
-      isRoot: true,
-      children: [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]],
-      };
+      root.children = [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]];
+      currentRoot = photosByCont;
+
       update();
+    }
+
+    function sortContinents(continent){
+      var orderedCountryByContinent = new Array([]);
+      orderedCountryByContinent[0][0] = continent[0];
+      var newCountry = true;
+
+      for (var i = 1; i < continent.length; i++){
+         newCountry = true;
+        for (var j = 0; j < orderedCountryByContinent.length; j++){
+            if (orderedCountryByContinent[j][0].country == continent[i].country){
+                orderedCountryByContinent[j].push(continent[i]);
+              //  console.log("Added existing country: " + continent[i].country);
+                j = orderedCountryByContinent.length;
+                newCountry = false;
+            }
+        } 
+        if (newCountry){
+          var temp = new Array(continent[i]);
+        //  console.log("Added New Country: " + continent[i].country);
+          orderedCountryByContinent.push(temp);
+        }
+
+      }
+
+      return orderedCountryByContinent;
     }
 
     var increment = 1;
@@ -257,12 +282,17 @@ function main() {
     });
 
   d3.select('#worldButton').on('click', function () {
-     var val = document.getElementById("tagSearch").value;
+    // var val = document.getElementById("tagSearch").value;
 
      //new photos to populate the screen
 
-       newNodes = searchSets(val);
-       setRoot(newNodes);
+       //newNodes = searchSets(val);
+      // setRoot(newNodes);
+
+      root.children = [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]];
+      currentRoot = photosByCont;
+
+      update();
 
 
     });
@@ -280,9 +310,14 @@ function main() {
             return false;
           }
         });
-        /*northAmericaPhotos.sort(function(a, b) {
-          return (b.favorites) - (a.favorites);
+       /* northAmericaPhotos.sort(function(a, b) {
+          return (b.country) - (a.country);
         });*/
+        console.log(northAmericaPhotos.length);
+       northAmericanContries = sortContinents(northAmericaPhotos);
+       currentRoot = northAmericanContries;
+       // console.log(northAmericanContries);
+
         na.push(naCountries);
         photosByCont.push(northAmericaPhotos);
 
