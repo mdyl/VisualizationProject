@@ -74,13 +74,45 @@ function main() {
       }
     }
 
+    var increment = 1;
+
     function click(d) {
-      if (d.id) {
-        window.open(d.downloadUrl);
+      increment = increment + 1; 
+      switch(d.continent){
+        case "Asia":
+          setRoot(asiaPhotos.slice(1 * increment,10 * increment));
+          update();
+          break;
+
+        case "North America":
+          setRoot(northAmericaPhotos.slice(1 * increment,10 * increment));
+          update();
+          break;
+
+        case "Europe":
+          setRoot(europePhotos.slice(1 * increment,10 * increment));
+          update();
+          break;
+
+        case "Oceania":
+          setRoot(oceaniaPhotos.slice(1 * increment,10 * increment));
+          update();
+          break;
+
+        case "Africa":
+          setRoot(africaPhotos.slice(1 * increment,10 * increment));
+          update();
+          break;
+
+        case "South America":
+          setRoot(southAmericaPhotos.slice(1 * increment,10 * increment));
+          update();
+          break;
       }
     }
 
    function searchKey(photoset,value){
+      increment = 1;
       value = value.toLowerCase();
        for (var i in photoset) {  
         if (photoset[i].userTags.length != 0){
@@ -250,7 +282,7 @@ function main() {
 
     var root = {
       isRoot: true,
-      children: [northAmericaPhotos[0], southAmericaPhotos[0], ],
+      children: [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]],
     };
 
 
@@ -314,7 +346,7 @@ function main() {
       var transition = node.transition().duration(1000); // operate on all nodes
       transition.attr('transform', translate);
       transition.select('circle').attr('r', function(d) { return d.r; });
-     // transition.select('patern').attr("id",  function(d) { return (d.id+"-icon");} ); //update photo id
+      transition.select('pattern').attr("id",  function(d) { return (d.id+"-icon");} ); //update photo id
       transition.select('bg').attr("xlink:href",  function(d) { return d.downloadUrl; } ); //update photo url
       transition.select('circle').style('fill', fill); //update background
       transition.select('text').attr('font-size', fontSize).text(nodeText);
