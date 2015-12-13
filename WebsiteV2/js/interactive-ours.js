@@ -1,5 +1,39 @@
 // Code for an interactive bubble visualization in D3.js
 
+//Area constants
+  var australia = [ "Australia", "New Zealand", "Norfolk Island" ];
+  var caribbean = ["Anguilla", "Antigua and Barbuda","Aruba","Bahamas","Barbados","British Virgin Islands","Cayman Islands","Cuba","Dominica","Dominican Republic","Grenada","Guadeloupe","Haiti","Jamaica","Martinique","Montserrat","Netherlands Antilles","Puerto Rico","Saint Barthélemy","Saint Kitts and Nevis", "Saint Lucia", "Saint Martin","Saint Vincent and the Grenadines","Trinidad and Tobago","Turks and Caicos Islands","U.S. Virgin Islands"];
+  var centralAmerica = ["Belize","Costa Rica","El Salvador","Guatemala","Honduras","Mexico","Nicaragua","Panama"];
+  var centralAsia = ["Kazakhstan","Kyrgyzstan","Tajikistan","Turkmenistan", "Uzbekistan"];
+  var channelIslands  = ["Guernsey", "Jersey"];
+  var commonwealthIndStates = ["Armenia","Azerbaijan","Belarus", "Georgia","Kazakhstan", "Kyrgyzstan","Moldova","Russia", "Tajikistan","Turkmenistan","Ukraine", "Uzbekistan"];
+  var easternAfrica = ["Burundi","Comoros","Djibouti", "Eritrea", "Ethiopia", "Kenya","Madagascar", "Malawi", "Mauritius", "Mayotte", "Mozambique", "Rwanda",  "Réunion",  "Seychelles", "Somalia","Tanzania", "Uganda", "Zambia", "Zimbabwe"];  
+  var easternAsia  =["China","Hong Kong SAR China", "Japan","Macau SAR China", "Mongolia", "North Korea", "South Korea","Taiwan"];
+  var easternEurope = ["Belarus","Bulgaria", "Czech Republic", "Hungary", "Moldova", "Poland", "Romania", "Russia","Slovakia",  "Ukraine", "Union of Soviet Socialist Republics"];
+  var melanesia = [ "Fiji", "New Caledonia", "Papua New Guinea", "Solomon Islands", "Vanuatu"];
+  var micronesianRegion = ["Guam", "Kiribati", "Marshall Islands", "Micronesia","Nauru", "Northern Mariana Islands", "Palau",];
+  var middleAfrica = ["Angola", "Cameroon", "Central African Republic", "Chad",  "Congo - Brazzaville",  "Congo - Kinshasa","Equatorial Guinea","Gabon","São Tomé and Príncipe"];
+  var northernAfrica = ["Algeria", "Egypt","Libya","Morocco","Sudan","Tunisia", "Western Sahara"];
+  var northernAmerica = ["Bermuda","Canada","Greenland", "Saint Pierre and Miquelon","United States"];
+  var northernEurope = [ "Denmark",  "Estonia",  "Faroe Islands",  "Finland",  "Guernsey", "Iceland", "Ireland",  "Isle of Man", "Jersey","Latvia", "Lithuania",  "Norway",  "Svalbard and Jan Mayen",  "Sweden", "United Kingdom", "Åland Islands"];
+  var Polynesia = [ "American Samoa","Cook Islands", "French Polynesia","Niue", "Pitcairn Islands", "Samoa","Tokelau", "Tonga", "Tuvalu", "Wallis and Futuna",];
+  var southAmerica = [ "Argentina", "Bolivia",  "Brazil", "Chile", "Colombia",  "Ecuador",  "Falkland Islands",  "French Guiana", "Guyana",  "Paraguay", "Peru", "Suriname",  "Uruguay", "Venezuela"];
+  var southEasternAsia = ["Brunei","Cambodia", "Indonesia", "Laos","Malaysia","Burma","Philippines", "Singapore", "Thailand","Timor-Leste", "Vietnam"];
+  var southernAfrica = [  "Botswana",  "Lesotho","Namibia","South Africa", "Swaziland"];
+  var southernAsia = [ "Afghanistan", "Bangladesh", "Bhutan", "India", "Iran", "Maldives", "Nepal",  "Pakistan", "Sri Lanka"];
+  var southernEurope = [ "Albania", "Andorra","Bosnia",  "Croatia", "Gibraltar", "Greece", "Italy","Macedonia", "Malta", "Montenegro", "Portugal", "San Marino", "Serbia",  "Serbia and Montenegro", "Slovenia",  "Spain", "Vatican City"];
+  var westernAfrica = ["Benin","Burkina Faso", "Cape Verde", "Côte d’Ivoire", "Gambia", "Ghana", "Guinea","Guinea-Bissau", "Liberia", "Mali", "Mauritania",  "Niger",  "Nigeria", "Saint Helena", "Senegal",  "Sierra Leone", "Togo"];
+  var westernAsia = [ "Armenia", "Azerbaijan","Bahrain", "Cyprus","Georgia", "Iraq", "Israel", "Jordan",  "Kuwait", "Lebanon","Neutral Zone", "Oman", "Palestinian Territories",  "Yemen", "Qatar", "Saudi Arabia",  "Syria", "Turkey", "United Arab Emirates", "Yemen"];
+  var westernEurope = ["Austria", "Belgium","East Germany","France","Germany", "Liechtenstein",  "Luxembourg", "Metropolitan France", "Monaco",  "Netherlands", "Switzerland",];
+
+  var naList = (northernAmerica, centralAmerica, caribbean);
+  var saList = (southAmerica);
+  var europeList = (channelIslands, commonwealthIndStates, easternEurope, northernEurope, southernEurope, westernEurope);
+  var asiaList = (centralAsia, easternAsia, southernAsia, southEasternAsia, westernAsia);
+  var africaList = (easternAfrica, middleAfrica, southernAfrica, northernAfrica, westernAfrica);
+  var oceaniaList = (australia, melanesia, micronesianRegion, Polynesia);
+
+
 function main() {
   var svg = d3.select('#visualization').append('svg');
   svg.attr('width', 800);
@@ -46,16 +80,16 @@ function main() {
         if (d.isActive) {
           return d.title;
         }
-        return Number(d.favorites);
+        return d.continent;
       }
     }
 
     function fontSize(d) {
       if (!d.isRoot) {
         if (d.isActive) {
-          return '18pt';
+          return '24pt';
         }
-        return '9pt';
+        return '15pt';
       }
     }
 
@@ -72,6 +106,14 @@ function main() {
         d.isActive = false;
         update();
       }
+    }
+
+    function worldButton(){
+      root = {
+      isRoot: true,
+      children: [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]],
+      };
+      update();
     }
 
     var increment = 1;
@@ -260,6 +302,11 @@ function main() {
           return (b.favorites) - (a.favorites);
         });*/
         photosByCont.push(oceaniaPhotos);
+
+    var root = {
+      isRoot: true,
+      children: [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]],
+    };
 //-------------------------------------->
   
 
@@ -280,18 +327,14 @@ function main() {
       }
     });
 
-    var root = {
-      isRoot: true,
-      children: [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]],
-    };
 
 
 
     function update() {
       // everytime update() is called, we (re)compute the layout, using the
       // previously provided value function
-      var laidOut = bubbleLayout.nodes(root).filter(function(d){return !d.children;});
-
+    
+      var laidOut = bubbleLayout.nodes(root);
       var node = svg.selectAll('.node').data(laidOut);
 
       // deal with newly created nodes:
@@ -301,9 +344,9 @@ function main() {
       g.attr('transform', translate);
 
 //~~~~~~~~~~~~~~~~~~
-      var defs = g.append('defs')
+     // var defs = g.append('defs')
 
-      var pattern = defs.append('pattern')
+      var pattern = g.append('pattern')
                               pattern.attr("id",  function(d) { return (d.id+"-icon");});
                               pattern.attr("height", 1);
                               pattern.attr("width", 1);
@@ -319,7 +362,7 @@ function main() {
 
 
 //~~~~~~~~~~~
-
+      
       var circle = g.append('svg:circle');
       circle.attr('r', function(d) { return d.r; });
       //circle.classed('node', true)
@@ -346,9 +389,9 @@ function main() {
       var transition = node.transition().duration(1000); // operate on all nodes
       transition.attr('transform', translate);
       transition.select('circle').attr('r', function(d) { return d.r; });
-      transition.select('pattern').attr("id",  function(d) { return (d.id+"-icon");} ); //update photo id
-      transition.select('bg').attr("xlink:href",  function(d) { return d.downloadUrl; } ); //update photo url
-      transition.select('circle').style('fill', fill); //update background
+      node.select('pattern').attr("id",  function(d) { return (d.id+"-icon");} ); //update photo id
+      node.select('image').attr("xlink:href",  function(d) { return d.downloadUrl; } ); //update photo url
+      node.select('circle').style('fill', fill); //update background
       transition.select('text').attr('font-size', fontSize).text(nodeText);
 ;
 
