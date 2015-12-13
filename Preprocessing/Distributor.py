@@ -100,7 +100,19 @@ listAfrica.sort(key = itemgetter('favorites'), reverse = True)
 listOceania.sort(key = itemgetter('favorites'), reverse = True)
 listSA.sort(key = itemgetter('favorites'), reverse = True)
 
+jsonList.sort(key = itemgetter('favorites'), reverse = True)
 
+file = open('updatedJSONV3.json', 'w')
+#file.write("[")
+
+for i in range (0, len(jsonList)):
+    tempVar = json.dumps(jsonList[i])
+    if i != (len(jsonList)-1):
+        file.write(tempVar + "\n")
+    else:
+        file.write(tempVar)
+#file.write("]")
+file.close()
 
 #Create the individual continent json files
 file = open('na.json', 'w')
