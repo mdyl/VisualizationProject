@@ -35,12 +35,12 @@
 
   var photosByCont = [];
   var currentRoot = photosByCont;
-  var naStates = [];
-  var saStates = [];
-  var africaStates = [];
-  var europeStates = [];
-  var oceaniaStates = [];
-  var asiaStates = [];
+  var naCountries = [];
+  var saCountries = [];
+  var africaCountries = [];
+  var europeCountries = [];
+  var oceaniaCountries = [];
+  var asiaCountries = [];
 
   var na = [];
   var sa = [];
@@ -265,7 +265,7 @@ function main() {
 
         var northAmericaPhotos = photos.filter(function (row) {
           if(row.continent == 'North America') {
-            naStates.push(row);
+            naCountries.push(row);
             return true;
           } else {
             return false;
@@ -274,12 +274,12 @@ function main() {
         /*northAmericaPhotos.sort(function(a, b) {
           return (b.favorites) - (a.favorites);
         });*/
-        na.push(naStates);
+        na.push(naCountries);
         photosByCont.push(northAmericaPhotos);
 
         var southAmericaPhotos = photos.filter(function (row) {
           if(row.continent == 'South America') {
-            saStates.push(row);
+            saCountries.push(row);
             return true;
           } else {
             return false;
@@ -288,12 +288,12 @@ function main() {
        /*  southAmericaPhotos.sort(function(a, b) {
           return (b.favorites) - (a.favorites);
         });*/
-        sa.push(saStates);
+        sa.push(saCountries);
         photosByCont.push(southAmericaPhotos);
 
         var europePhotos = photos.filter(function (row) {
           if(row.continent == 'Europe') {
-            europeStates.push(row);
+            europeCountries.push(row);
             return true;
           } else {
             return false;
@@ -302,12 +302,12 @@ function main() {
    /*       europePhotos.sort(function(a, b) {
           return (b.favorites) - (a.favorites);
         }); */
-          europe.push(europeStates);
+          europe.push(europeCountries);
           photosByCont.push(europePhotos);
 
         var asiaPhotos = photos.filter(function (row) {
           if(row.continent == 'Asia') {
-            asiaStates.push(row);
+            asiaCountries.push(row);
             return true;
           } else {
             return false;
@@ -316,12 +316,12 @@ function main() {
      /*   asiaPhotos.sort(function(a, b) {
           return (b.favorites) - (a.favorites);
         }); */
-        asia.push(asiaStates);
+        asia.push(asiaCountries);
         photosByCont.push(asiaPhotos);
 
         var africaPhotos = photos.filter(function (row) {
           if(row.continent == 'Africa') {
-            africaStates.push(row);
+            africaCountries.push(row);
             return true;
           } else {
             return false;
@@ -330,11 +330,11 @@ function main() {
    /*        africaPhotos.sort(function(a, b) {
            return (b.favorites) - (a.favorites);
         }); */
-          photosByCont.push(africaPhotos);
+          photosByCont.push(africaCountries);
 
         var oceaniaPhotos = photos.filter(function (row) {
           if(row.continent == 'Oceania') {
-            oceaniaStates.push(row);
+            oceaniaCountries.push(row);
             return true;
           } else {
             return false;
@@ -343,7 +343,7 @@ function main() {
    /*     oceaniaPhotos.sort(function(a, b) {
           return (b.favorites) - (a.favorites);
         });*/
-        oceania.push(oceaniaStates);
+        oceania.push(oceaniaCountries);
         photosByCont.push(oceaniaPhotos);
 
     var root = {
