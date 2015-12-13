@@ -111,6 +111,12 @@ function main() {
       if (!d.isRoot) {
         // when the user hovers over a node, we mark it as isActive
         d.isActive = true;
+        div.transition()        
+                .duration(200)      
+                .style("opacity", .9);      
+            div .html(d.title + "<br/>" + d.user.nickname + "<br/>" + d.dateTaken + "<br/>"  + d.description)  
+                .style("left", (d3.event.pageX) + "px")     
+                .style("top", (d3.event.pageY - 28) + "px");   
         update();
       }
     }
@@ -118,6 +124,9 @@ function main() {
     function mouseLeave(d) {
       if (!d.isRoot) {
         d.isActive = false;
+          div.transition()        
+                .duration(500)      
+                .style("opacity", 0);   
         update();
       }
     }
@@ -372,10 +381,15 @@ function main() {
 
 
 
+     var div = d3.select("body").append("div")   
+          .attr("class", "tooltip")               
+          .style("opacity", 0);
 
     function update() {
       // everytime update() is called, we (re)compute the layout, using the
       // previously provided value function
+
+ 
     
       var laidOut = bubbleLayout.nodes(root);
       var node = svg.selectAll('.node').data(laidOut);
