@@ -81,11 +81,18 @@ function main() {
     }
 
    function searchKey(photoset,value){
+      value = value.toLowerCase();
        for (var i in photoset) {  
-          if(photoset[i].userTag == value){
-            return photoset[i];
+        if (photoset[i].userTags.length != 0){
+         for (j in photoset[i].userTags){
+            temp = photoset[i].userTags[j];
+            if(temp.toLowerCase() == value){
+              return photoset[i];
+            }
           }
+        }
        }
+     
        return false; //if there is no photo for that key
    }
 
@@ -103,6 +110,7 @@ function main() {
          newPhotoSets.push(topPhoto);
         }
       }
+      console.log(newPhotoSets);
       return newPhotoSets;
    }
 
@@ -242,7 +250,7 @@ function main() {
 
     var root = {
       isRoot: true,
-      children: [northAmericaPhotos[0], southAmericaPhotos[0], europePhotos[0], asiaPhotos[0], africaPhotos[0], oceaniaPhotos[0]],
+      children: [northAmericaPhotos[0], southAmericaPhotos[0], ],
     };
 
 
@@ -250,13 +258,13 @@ function main() {
     function update() {
       // everytime update() is called, we (re)compute the layout, using the
       // previously provided value function
-      var laidOut = bubbleLayout.nodes(root);
+      var laidOut = bubbleLayout.nodes(root).filter(function(d){return !d.children;});
 
       var node = svg.selectAll('.node').data(laidOut);
 
       // deal with newly created nodes:
       var g = node.enter().append('g').classed('node', true); // note 'enter()'
-            console.log("X: " + g.x + " Y:" + g.y);
+
 
       g.attr('transform', translate);
 
@@ -306,7 +314,9 @@ function main() {
       var transition = node.transition().duration(1000); // operate on all nodes
       transition.attr('transform', translate);
       transition.select('circle').attr('r', function(d) { return d.r; });
-      //transition.select('circle').style('fill', fill);
+     // transition.select('patern').attr("id",  function(d) { return (d.id+"-icon");} ); //update photo id
+      transition.select('bg').attr("xlink:href",  function(d) { return d.downloadUrl; } ); //update photo url
+      transition.select('circle').style('fill', fill); //update background
       transition.select('text').attr('font-size', fontSize).text(nodeText);
 ;
 
