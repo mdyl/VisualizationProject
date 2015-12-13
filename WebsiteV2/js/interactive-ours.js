@@ -34,7 +34,6 @@
   var oceaniaList = (australia, melanesia, micronesianRegion, Polynesia);
 
   var photosByCont = [];
-  var currentRoot = photosByCont;
   var naCountries = [];
   var saCountries = [];
   var africaCountries = [];
@@ -133,7 +132,7 @@ function main() {
 
     function worldButton(){
       root.children = [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]];
-      currentRoot = photosByCont;
+      workingSet.currentRoot = photosByCont;
 
       update();
     }
@@ -169,48 +168,50 @@ function main() {
       increment = increment + 1; 
       switch(d.continent){
         case "Asia":
-          setRoot(asiaPhotos.slice(1 * increment,10 * increment));
-          currentRoot = asia;
-          update();
+          workingSet.currentRoot = asiaCountries;
           break;
 
         case "North America":
-          setRoot(northAmericaPhotos.slice(1 * increment,10 * increment));
-          currentRoot = na;
-          update();
+          workingSet.currentRoot = northAmericanCountries;
           break;
 
         case "Europe":
-          setRoot(europePhotos.slice(1 * increment,10 * increment));
-          currentRoot = europe;
-          update();
+          workingSet.currentRoot = europeCountries;
           break;
 
         case "Oceania":
-          setRoot(oceaniaPhotos.slice(1 * increment,10 * increment));
-          currentRoot = oceania;
-          update();
+          workingSet.currentRoot = oceaniaCountries;
           break;
 
         case "Africa":
-          setRoot(africaPhotos.slice(1 * increment,10 * increment));
-          currentRoot = africa;
-          update();
+          workingSet.currentRoot = africaCountries;
           break;
 
         case "South America":
-          setRoot(southAmericaPhotos.slice(1 * increment,10 * increment));
-          currentRoot = sa;
-          update();
+         // setRoot(southAmericaPhotos.slice(1 * increment,10 * increment));
+          workingSet.currentRoot = southAmericanCountries;
           break;
       }
+          changeSet();
+          update();
+    }
+
+    function getTop(){
+     newPhotoSets = [];
+     console.log(workingSet.currentRoot);
+      for (var i in workingSet.currentRoot){
+        var topPhoto = workingSet.currentRoot[i];
+        newPhotoSets.push(topPhoto[0]);
+      }
+      console.log(newPhotoSets);
+      return newPhotoSets;
     }
 
    function searchKey(photoset,value){
       increment = 1;
       value = value.toLowerCase();
        for (var i in photoset) {  
-        if (photoset[i].userTags.length != 0){
+        if (photoset[i].userTags.length != undefined){
          for (j in photoset[i].userTags){
             temp = photoset[i].userTags[j];
             if(temp.toLowerCase() == value){
@@ -228,51 +229,37 @@ function main() {
     root.children = fav;
    }
 
+   function changeSet(){
+      if (workingSet.tag){
+        setRoot(searchSets(workingSet.currentTag));
+      } else {
+          setRoot(getTop());
+      }
+   }
 
    function searchSets(value){
       newPhotoSets = [];
-      for (var i in currentRoot){
-        topPhoto = searchKey(currentRoot[i],value);
+      for (var i in workingSet.currentRoot){
+        topPhoto = searchKey(workingSet.currentRoot[i],value);
         if(topPhoto != false){ //so only countrys that have a photo are returned
          newPhotoSets.push(topPhoto);
         }
       }
-      console.log(newPhotoSets);
       return newPhotoSets;
    }
 
    //function searchDate()
    //function searchKey()
 
-  
-
-  //testing search function
-    function getObjects(obj, key, val) {
-        var objects = [];
-        for (var i in obj) {  
-          //  console.log("LENGTH" + obj.length);
-       
-            if (!obj.hasOwnProperty(i)) continue;
-            if (typeof obj[i] == 'object') {
-                objects = objects.concat(getObjects(obj[i], key, val));
-                // console.log("SUCCESS");
-            } else if (i == key && obj[key] == val) {
-                objects.push(obj);
-            }
-        }
-    
-        return objects;
-    }
-
- // document.getElementById("nicknameButton").addEventListener("click", search);
 
 
-
+ //seach function
   d3.select('#tagButton').on('click', function () {
      var val = document.getElementById("tagSearch").value;
 
      //new photos to populate the screen
-
+       workingSet.tag = true;
+       workingSet.currentTag = val;
        newNodes = searchSets(val);
        setRoot(newNodes);
        update();
@@ -290,7 +277,7 @@ function main() {
       // setRoot(newNodes);
 
       root.children = [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]];
-      currentRoot = photosByCont;
+      workingSet.currentRoot = photosByCont;
 
       update();
 
@@ -310,90 +297,77 @@ function main() {
             return false;
           }
         });
-       /* northAmericaPhotos.sort(function(a, b) {
-          return (b.country) - (a.country);
-        });*/
-        console.log(northAmericaPhotos.length);
-       northAmericanContries = sortContinents(northAmericaPhotos);
-      
-       // console.log(northAmericanContries);
-
-        na.push(naCountries);
+        //sorted countries of north America
+        var northAmericanCountries = sortContinents(northAmericaPhotos);
         photosByCont.push(northAmericaPhotos);
 
         var southAmericaPhotos = photos.filter(function (row) {
           if(row.continent == 'South America') {
-            saCountries.push(row);
             return true;
           } else {
             return false;
           }
         });
-       /*  southAmericaPhotos.sort(function(a, b) {
-          return (b.favorites) - (a.favorites);
-        });*/
-        sa.push(saCountries);
+        //sorted countries of South America
+        var southAmericanCountries = sortContinents(southAmericaPhotos);
         photosByCont.push(southAmericaPhotos);
 
         var europePhotos = photos.filter(function (row) {
           if(row.continent == 'Europe') {
-            europeCountries.push(row);
             return true;
           } else {
             return false;
           }
         });
-   /*       europePhotos.sort(function(a, b) {
-          return (b.favorites) - (a.favorites);
-        }); */
-          europe.push(europeCountries);
+        //sorted countries of Europe
+        europeCountries = sortContinents(europePhotos);
           photosByCont.push(europePhotos);
 
         var asiaPhotos = photos.filter(function (row) {
           if(row.continent == 'Asia') {
-            asiaCountries.push(row);
             return true;
           } else {
             return false;
           }
         });
-     /*   asiaPhotos.sort(function(a, b) {
-          return (b.favorites) - (a.favorites);
-        }); */
-        asia.push(asiaCountries);
+        //sorted countries of Asia
+        var asiaCountries = sortContinents(asiaPhotos);
         photosByCont.push(asiaPhotos);
 
         var africaPhotos = photos.filter(function (row) {
           if(row.continent == 'Africa') {
-            africaCountries.push(row);
             return true;
           } else {
             return false;
           }
         });
-   /*        africaPhotos.sort(function(a, b) {
-           return (b.favorites) - (a.favorites);
-        }); */
+          //sorted countries of Africa
+          var africaContries = sortContinents(africaPhotos);
           photosByCont.push(africaCountries);
 
         var oceaniaPhotos = photos.filter(function (row) {
           if(row.continent == 'Oceania') {
-            oceaniaCountries.push(row);
             return true;
           } else {
             return false;
           }
         });
-   /*     oceaniaPhotos.sort(function(a, b) {
-          return (b.favorites) - (a.favorites);
-        });*/
-        oceania.push(oceaniaCountries);
+   //sorted countries of Oceania
+        var oceaniaContries = sortContinents(oceaniaPhotos);
         photosByCont.push(oceaniaPhotos);
 
     var root = {
       isRoot: true,
       children: [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]],
     }; 
+
+
+    var workingSet = {
+      tag: false,
+      currentTag: "",
+      currentRoot: photosByCont,
+    };
+
 //-------------------------------------->
   
 
@@ -481,8 +455,10 @@ function main() {
       var transition = node.transition().duration(1000); // operate on all nodes
       transition.attr('transform', translate);
       transition.select('circle').attr('r', function(d) { return d.r; });
-      node.select('pattern').attr("id",  function(d) { return (d.id+"-icon");} ); //update photo id
-      node.select('image').attr("xlink:href",  function(d) { return d.downloadUrl; } ); //update photo url
+      node.select('pattern').attr("id",  function(d) { return (d.id+"-icon");}
+                            .attr('patternContentUnits', 'objectBoundingBox') ); //update photo id
+      node.select('image').attr("xlink:href",  function(d) { return d.downloadUrl; }
+                          .attr("preserveAspectRatio", "xMinYMin slice") ); //update photo url
       node.select('circle').style('fill', fill); //update background
       transition.select('text').attr('font-size', fontSize).text(nodeText);
 ;
