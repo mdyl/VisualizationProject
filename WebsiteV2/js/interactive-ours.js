@@ -216,24 +216,6 @@ function main() {
       return newPhotoSets;
     }
 
-   function searchKey(photoset,value){
-      increment = 1;
-      value = value.toLowerCase();
-       for (var i in photoset) {  
-        if (photoset[i].userTags.length != undefined){
-         for (j in photoset[i].userTags){
-            temp = photoset[i].userTags[j];
-            if(temp.toLowerCase() == value){
-              return photoset[i];
-            }
-          }
-        }
-       }
-     
-       return false; //if there is no photo for that key
-   }
-
-
   function setRoot(fav){
     root.children = fav;
    }
@@ -251,7 +233,7 @@ function main() {
    function searchSets(value){
       newPhotoSets = [];
       for (var i in workingSet.currentRoot){
-        topPhoto = searchKey(workingSet.currentRoot[i],value);
+        topPhoto = searchUserTag(workingSet.currentRoot[i],value);
         if(topPhoto != false){ //so only countrys that have a photo are returned
          newPhotoSets.push(topPhoto);
         }
@@ -259,7 +241,37 @@ function main() {
       return newPhotoSets;
    }
 
-   //function searchDate()
+  function searchUserTag(photoset,value){
+      value = value.toLowerCase();
+       for (var i in photoset) {  
+        if (photoset[i].userTags.length != undefined){
+         for (j in photoset[i].userTags){
+            temp = photoset[i].userTags[j];
+            if(temp.toLowerCase() == value){
+              return photoset[i];
+            }
+          }
+        }
+       }
+     
+       return false; //if there is no photo for that key
+   }
+
+   function searchDate(value){
+       value = value.toLowerCase();
+       for (var i in photoset) {  
+        if (photoset[i].userTags.length != undefined){
+         for (j in photoset[i].userTags){
+            temp = photoset[i].userTags[j];
+            if(temp.toLowerCase() == value){
+              return photoset[i];
+            }
+          }
+        }
+       }
+     
+       return false; //if there is no photo for that key
+   }
    //function searchKey()
 
 
@@ -290,7 +302,6 @@ function main() {
 
       root.children = [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]];
       workingSet.currentRoot = photosByCont;
-
       update();
 
 
@@ -354,7 +365,7 @@ function main() {
           }
         });
           //sorted countries of Africa
-          var africaContries = sortContinents(africaPhotos);
+          var africaCountries = sortContinents(africaPhotos);
           photosByCont.push(africaCountries);
 
         var oceaniaPhotos = photos.filter(function (row) {
@@ -365,7 +376,7 @@ function main() {
           }
         });
    //sorted countries of Oceania
-        var oceaniaContries = sortContinents(oceaniaPhotos);
+        var oceaniaCountries = sortContinents(oceaniaPhotos);
         photosByCont.push(oceaniaPhotos);
 
     var root = {
@@ -448,9 +459,8 @@ function main() {
       circle.attr('r', function(d) { return d.r; });
       //circle.classed('node', true)
       circle.style('fill', fill)
-            .style("fill-opacity", .5)
-            .on('mouseenter', function() {circle.transition().duration(500).style("fill-opacity", 1)} )
-            .on('mouseleave', function() {circle.transition().duration(500).style("fill-opacity", .5)} );
+            .on('mouseenter', function(d) {if (d.isActive = false) { circle.transition().duration(500).style("fill-opacity", .5); }} )
+            .on('mouseleave', function() {circle.transition().duration(500).style("fill-opacity", 1); } ); 
 
 
       g.on('mouseenter', mouseEnter);
