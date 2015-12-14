@@ -47,6 +47,7 @@
   var asia = [];
   var oceania = [];
   var europe = [];
+
 function main() {
   var svg = d3.select('#visualization').append('svg');
   svg.attr('width', 800);
@@ -96,6 +97,9 @@ function main() {
         if(workingSet.country){
           return d.country;
         }
+        if(workingSet.onlyCountry){
+          return d.favorites;
+        }
         return d.continent;
       }
     }
@@ -143,7 +147,6 @@ function main() {
         for (var j = 0; j < orderedCountryByContinent.length; j++){
             if (orderedCountryByContinent[j][0].country == continent[i].country){
                 orderedCountryByContinent[j].push(continent[i]);
-              //  console.log("Added existing country: " + continent[i].country);
                 j = orderedCountryByContinent.length;
                 newCountry = false;
             }
@@ -158,14 +161,37 @@ function main() {
       return orderedCountryByContinent;
     }
 
+    function createCountrySet(country){
+      var countryList = workingSet.currentRoot;
+      var countryPreArray;
+      for (var i in countryList){
+        if (countryList[i][0].country == country){
+          countryPreArray = countryList[i];
+        }
+      }
+      // var countryArray = new Array([]);
+      // for (var i in countryPreArray){
+      //   var temp = new Array(countryPreArray[i]);
+      //   countryArray.push(temp); 
+      // }
+      return countryPreArray;
+    }
+
+
 
     function click(d) {
-     // increment = increment + 1; 
-     if (workingSet.country == true){
+     if (workingSet.onlyCountry == true){
        window.open(d.downloadUrl);
        return;
      }
-      switch(d.continent){
+     if(workingSet.country) {
+        workingSet.onlyCountry = true;
+        workingSet.country = false;
+        changeSet(createCountrySet(d.country));
+
+        return;
+     }
+        switch(d.continent){
         case "Asia":
           changeSet(asiaCountries);
           workingSet.country = true;
@@ -204,13 +230,10 @@ function main() {
           break;
       
       }
-
-
     }
 
     function getTop(){
      newPhotoSets = [];
-     console.log(workingSet.currentRoot);
       for (var i in workingSet.currentRoot){
         var topPhoto = workingSet.currentRoot[i];
         newPhotoSets.push(topPhoto[0]);
@@ -274,28 +297,115 @@ function main() {
        return false; //if there is no photo for that key
    }
 
+   function searchTagCountry(photoset, value){
+     value = value.toLowerCase();
+     var topTags = [];
+       for (var i in photoset) {  
+        if (photoset[i].userTags.length != 0){
+         for (j in photoset[i].userTags){
+            temp = photoset[i].userTags[j];
+            if(temp.toLowerCase() == value){
+              topTags.pushBack(photoset[i]);
+            }
+          }
+          for (var j = 0; j < photoset[i].machineTags.length ; j++){
+            temp = photoset[i].machineTags[j].tag;
+            if(temp.toLowerCase() == value && photoset[i].machineTags[j].confidence > .8){
+               topTags.pushBack(photoset[i]);
+            }
+          }
+        }
+       }
+     if(topTags.length !=0 ){
+       return topTags;
+     }else {
+       return false; //if there is no photo for that key
+     }
+    }
 
-  function setRoot(fav){
+   function searchDateCountry(photoset, date){
+       var dates = [];
+       for (var i in photoset) {  
+         temp = photoset[i].dateTaken;
+         if(temp == String(date)){
+              dates.push(photoset[i]);
+          }      
+       }   
+       if (dates.length !=0){
+          return dates;
+       } else {
+       return false;
+        }
+   }
+
+   function searchBothCountry(photoset, value, date){
+     value = value.toLowerCase();
+     var topTags = [];
+       for (var i in photoset) {  
+        if (photoset[i].userTags.length != 0){
+         for (j in photoset[i].userTags){
+            temp = photoset[i].userTags[j];
+            if(temp.toLowerCase() == value && temp.dateTaken == String(date) ){
+              topTags.pushBack(photoset[i]);
+            }
+          }
+          for (var j = 0; j < photoset[i].machineTags.length ; j++){
+            temp = photoset[i].machineTags[j].tag;
+            if(temp.toLowerCase() == value && photoset[i].machineTags[j].confidence > .8  && temp.dateTaken == String(date) ){
+               topTags.pushBack(photoset[i]);
+            }
+          }
+        }
+       }
+     if(topTags.length !=0 ){
+       return topTags;
+     }else {
+       return false; //if there is no photo for that key
+     }
+    }
+
+    function getTopCountry(){
+      var i = 0;
+      var topCountries = [];
+      while (i < 10 && i < workingSet.currentRoot.length){
+        topCountries.push(workingSet.currentRoot[i]);
+        i++;
+      }
+      return topCountries;
+    }
+
+   function setRoot(fav){
     root.children = fav;
    }
 
-   function changeSet(set){
-   workingSet.currentRoot = set;
 
-      if (workingSet.tag && !workingSet.date){
-        setRoot(searchSets(workingSet.currentTag, ""));
-      } else if (!workingSet.tag && workingSet.date){
-         setRoot(searchSets("",workingSet.currentDate));
-      } else if (workingSet.tag && workingSet.date){
-         setRoot(searchSets(workingSet.currentTag, workingSet.currentDate));
+   function changeSet(set){
+      workingSet.currentRoot = set;
+
+      if(!workingSet.onlyCountry){
+          if (workingSet.tag && !workingSet.date){
+            setRoot(searchSets(workingSet.currentTag, ""));
+          } else if (!workingSet.tag && workingSet.date){
+             setRoot(searchSets("",workingSet.currentDate));
+          } else if (workingSet.tag && workingSet.date){
+             setRoot(searchSets(workingSet.currentTag, workingSet.currentDate));
+          }else {
+            setRoot(getTop());
+          }
+      } else if (workingSet.onlyCountry){
+          if (workingSet.tag && !workingSet.date){
+            setRoot(searchTagCountry(set, workingSet.currentTag));
+          } else if (!workingSet.tag && workingSet.date){
+            setRoot(searchDateCountry(set,workingSet.currentDate));
+          } else if (workingSet.tag && workingSet.date){
+            setRoot(searchBothCountry(set, workingSet.currentTag, workingSet.currentDate));
+          } else {
+            setRoot(getTopCountry() );
+          }
+       }
       }
-      else {
-        setRoot(getTop());
-      }
-   }
 
    function searchSets(val, date){
-    //console.log(workingSet.currentRoot);
       newPhotoSets = [];
       for (var i in workingSet.currentRoot){
         if (workingSet.tag && !workingSet.date){
@@ -307,7 +417,7 @@ function main() {
         } else {
           return getTop();
         }
-        console.log(topPhoto);
+        //console.log(topPhoto);
         if(topPhoto != false){ //so only countrys that have a photo are returned
          newPhotoSets.push(topPhoto);
         }
@@ -323,7 +433,6 @@ function main() {
      var val = document.getElementById("tagSearch").value;
      var date = document.getElementById('searchdate').value;
 
-     console.log(date);
 
      //new photos to populate the screen
      if (val != ""){
@@ -505,7 +614,10 @@ function main() {
     };
 
 //-------------------------------------->
-  
+      //TESTING FUNCTIONS above functions
+
+
+
 
 
     var palette = d3.scale.category20();
@@ -531,7 +643,6 @@ function main() {
       }
       if (workingSet.country) {
         document.getElementById("main-title").innerHTML = workingSet.currentRoot[0][0].continent + " " + workingSet.currentTag + " " + workingSet.currentDate ;
-
       }
     }
 
@@ -555,7 +666,6 @@ function main() {
       g.attr('transform', translate);
 
 //~~~~~~~~~~~~~~~~~~
-     // var defs = g.append('defs')
 
       var pattern = g.append('pattern')
                               pattern.attr("id",  function(d) { return (d.id+"-icon");});
@@ -593,11 +703,6 @@ function main() {
       text.attr('fill', 'white');
       text.attr('text-anchor', 'middle');
       text.attr('dominant-baseline', 'middle');
-      //text.style('stroke', 'black');
-      //text.style('stroke-width', '1');
-      //text.style('stroke-linecap', 'round');
-      //text.style('stroke-linejoin', 'miter');
-      //text.style('stroke-location', 'outside');
 
        
    
@@ -619,9 +724,9 @@ function main() {
       // if some nodes are removed, you can use node.exit() to get a placeholder
       // to operate on them
         node.exit().remove();
-
-      
+ 
     }
+
 
     update(); // on initial page loading, use update() to show the visualization
   });
