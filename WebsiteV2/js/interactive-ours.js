@@ -210,10 +210,11 @@ function main() {
     }
 
    function searchKey(photoset,value){
-      increment = 1;
+    console.log(photoset.country + ": ")
+    console.log(photoset);
       value = value.toLowerCase();
        for (var i in photoset) {  
-        if (photoset[i].userTags.length != undefined){
+        if (photoset[i].userTags.length != 0){
          for (j in photoset[i].userTags){
             temp = photoset[i].userTags[j];
             if(temp.toLowerCase() == value){
@@ -242,6 +243,7 @@ function main() {
    }
 
    function searchSets(value){
+    //console.log(workingSet.currentRoot);
       newPhotoSets = [];
       for (var i in workingSet.currentRoot){
         topPhoto = searchKey(workingSet.currentRoot[i],value);
@@ -268,8 +270,6 @@ function main() {
        newNodes = searchSets(val);
        setRoot(newNodes);
        update();
-
-
      
     });
 
@@ -290,12 +290,10 @@ function main() {
     });
 
   d3.select('#saButton').on('click', function () {
-
       changeSet(southAmericanCountries);
       workingSet.country = true;
 
       update();
-
 
     });
 
@@ -346,7 +344,6 @@ function main() {
 
         var northAmericaPhotos = photos.filter(function (row) {
           if(row.continent == 'North America') {
-            naCountries.push(row);
             return true;
           } else {
             return false;
@@ -398,7 +395,7 @@ function main() {
         });
           //sorted countries of Africa
           var africaCountries = sortContinents(africaPhotos);
-          photosByCont.push(africaCountries);
+          photosByCont.push(africaPhotos);
 
         var oceaniaPhotos = photos.filter(function (row) {
           if(row.continent == 'Oceania') {
