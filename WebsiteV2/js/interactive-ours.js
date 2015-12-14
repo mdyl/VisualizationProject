@@ -215,7 +215,6 @@ function main() {
         var topPhoto = workingSet.currentRoot[i];
         newPhotoSets.push(topPhoto[0]);
       }
-      console.log(newPhotoSets);
       return newPhotoSets;
     }
 
@@ -243,12 +242,11 @@ function main() {
 
    function searchDate(photoset, date){
        for (var i in photoset) {  
-         for (j in photoset[i].dateTaken){
-            temp = photoset[i].dateTaken[j];
-            if(temp == date){
+            temp = photoset[i].dateTaken;
+            if(temp == String(date)){
               return photoset[i];
             }
-          }
+    
         
        }
      
@@ -264,9 +262,14 @@ function main() {
    function changeSet(set){
    workingSet.currentRoot = set;
 
-      if (workingSet.tag){
-        setRoot(searchSets(workingSet.currentTag));
-      } else {
+      if (workingSet.tag && !workingSet.date){
+        setRoot(searchSets(workingSet.currentTag, ""));
+      } else if (!workingSet.tag && workingSet.date){
+         setRoot(searchSets("",workingSet.currentDate));
+      } else if (workingSet.tag && workingSet.date){
+         setRoot(searchSets(workingSet.currentTag, workingSet.currentDate));
+      }
+      else {
         setRoot(getTop());
       }
    }
@@ -276,11 +279,13 @@ function main() {
       newPhotoSets = [];
       for (var i in workingSet.currentRoot){
         if (workingSet.tag && !workingSet.date){
-          topPhoto = searchKey(workingSet.currentRoot[i],value);
+          topPhoto = searchKey(workingSet.currentRoot[i],val);
         } else if (!workingSet.tag && workingSet.date){
           topPhoto = searchDate(workingSet.currentRoot[i],date);
         } else if (workingSet.tag && workingSet.date){
-          topPhoto = searchBoth(workingSet.currentRoot[i],value, date);
+          topPhoto = searchBoth(workingSet.currentRoot[i],val, date);
+        } else {
+          return getTop();
         }
         console.log(topPhoto);
         if(topPhoto != false){ //so only countrys that have a photo are returned
@@ -298,15 +303,25 @@ function main() {
      var val = document.getElementById("tagSearch").value;
      var date = document.getElementById('searchdate').value;
 
+     console.log(date);
+
      //new photos to populate the screen
      if (val != ""){
         workingSet.tag = true;
         workingSet.currentTag = val;
+
+     }else{
+        workingSet.tag = false;
      }
      if (date != ""){
         workingSet.date = true;
-        workingSet.currentDate = val;
+        workingSet.currentDate = date;
+
+     }else {
+        workingSet.date = false;
+
      }
+
 
 
        newNodes = searchSets(val, date);
@@ -376,7 +391,6 @@ function main() {
 
       changeSet(oceaniaCountries);
       workingSet.country = true;
-
       update();
 
 
