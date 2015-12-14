@@ -188,7 +188,7 @@ function main() {
         workingSet.onlyCountry = true;
         workingSet.country = false;
         changeSet(createCountrySet(d.country));
-
+        update();
         return;
      }
         switch(d.continent){
@@ -300,22 +300,30 @@ function main() {
    function searchTagCountry(photoset, value){
      value = value.toLowerCase();
      var topTags = [];
-       for (var i in photoset) {  
-        if (photoset[i].userTags.length != 0){
-         for (j in photoset[i].userTags){
+       for (var i = 0; i < photoset.length; i++) {  
+          if (topTags.length > 5){
+            return topTags;
+          }
+
+
+         for (var j = 0; j < photoset[i].userTags.length ; j++){
             temp = photoset[i].userTags[j];
             if(temp.toLowerCase() == value){
-              topTags.pushBack(photoset[i]);
+              topTags.push(photoset[i]);
+              j = photoset[i].userTags.length;
             }
           }
+
           for (var j = 0; j < photoset[i].machineTags.length ; j++){
             temp = photoset[i].machineTags[j].tag;
             if(temp.toLowerCase() == value && photoset[i].machineTags[j].confidence > .8){
-               topTags.pushBack(photoset[i]);
+               topTags.push(photoset[i]);
+               j = photoset[i].machineTags.length;
+
             }
           }
-        }
-       }
+       
+     }
      if(topTags.length !=0 ){
        return topTags;
      }else {
@@ -342,20 +350,24 @@ function main() {
      value = value.toLowerCase();
      var topTags = [];
        for (var i in photoset) {  
-        if (photoset[i].userTags.length != 0){
-         for (j in photoset[i].userTags){
+         if (topTags.length > 5){
+            return topTags;
+         }
+         for (var j = 0; j < photoset[i].userTags.length ; j++){
             temp = photoset[i].userTags[j];
             if(temp.toLowerCase() == value && temp.dateTaken == String(date) ){
-              topTags.pushBack(photoset[i]);
+              topTags.push(photoset[i]);
+              j = photoset[i].userTags.length;
             }
           }
           for (var j = 0; j < photoset[i].machineTags.length ; j++){
             temp = photoset[i].machineTags[j].tag;
             if(temp.toLowerCase() == value && photoset[i].machineTags[j].confidence > .8  && temp.dateTaken == String(date) ){
-               topTags.pushBack(photoset[i]);
+               topTags.push(photoset[i]);
+               j = photoset[i].machineTags.length;
             }
           }
-        }
+        
        }
      if(topTags.length !=0 ){
        return topTags;
@@ -381,18 +393,7 @@ function main() {
 
    function changeSet(set){
       workingSet.currentRoot = set;
-
-      if(!workingSet.onlyCountry){
-          if (workingSet.tag && !workingSet.date){
-            setRoot(searchSets(workingSet.currentTag, ""));
-          } else if (!workingSet.tag && workingSet.date){
-             setRoot(searchSets("",workingSet.currentDate));
-          } else if (workingSet.tag && workingSet.date){
-             setRoot(searchSets(workingSet.currentTag, workingSet.currentDate));
-          }else {
-            setRoot(getTop());
-          }
-      } else if (workingSet.onlyCountry){
+      if (workingSet.onlyCountry){
           if (workingSet.tag && !workingSet.date){
             setRoot(searchTagCountry(set, workingSet.currentTag));
           } else if (!workingSet.tag && workingSet.date){
@@ -402,8 +403,18 @@ function main() {
           } else {
             setRoot(getTopCountry() );
           }
+       } else {
+          if (workingSet.tag && !workingSet.date){
+            setRoot(searchSets(workingSet.currentTag, ""));
+          } else if (!workingSet.tag && workingSet.date){
+             setRoot(searchSets("",workingSet.currentDate));
+          } else if (workingSet.tag && workingSet.date){
+             setRoot(searchSets(workingSet.currentTag, workingSet.currentDate));
+          }else {
+            setRoot(getTop());
+          }
        }
-      }
+    }
 
    function searchSets(val, date){
       newPhotoSets = [];
@@ -452,9 +463,19 @@ function main() {
         workingSet.currentDate = "";
      }
 
-
-
-       newNodes = searchSets(val, date);
+     if(workingSet.onlyCountry){
+          if (workingSet.tag && !workingSet.date){
+            newNodes = searchTagCountry(workingSet.currentRoot, workingSet.currentTag);
+          } else if (!workingSet.tag && workingSet.date){
+            newNodes = searchDateCountry(workingSet.currentRoot,workingSet.currentDate);
+          } else if (workingSet.tag && workingSet.date){
+            newNodes = searchBothCountry(workingSet.currentRoot, workingSet.currentTag, workingSet.currentDate);
+          } else {
+            newNodes = getTopCountry();
+          }
+     } else {
+          newNodes = searchSets(val, date);
+     }
 
        setRoot(newNodes);
        update();
@@ -464,15 +485,18 @@ function main() {
 
 
   d3.select('#worldButton').on('click', function () {
-      changeSet(photosByCont);
       workingSet.country = false;
+      workingSet.onlyCountry = false;
+      changeSet(photosByCont);
+
+
       update();
     });
 
   d3.select('#naButton').on('click', function () {
-
+      workingSet.onlyCountry = false;
       changeSet(northAmericanCountries);     
-       workingSet.country = true;
+      workingSet.country = true;
 
       update();
 
@@ -480,6 +504,7 @@ function main() {
     });
 
   d3.select('#saButton').on('click', function () {
+      workingSet.onlyCountry = false;
       changeSet(southAmericanCountries);
       workingSet.country = true;
 
@@ -488,7 +513,7 @@ function main() {
     });
 
   d3.select('#euroButton').on('click', function () {
-
+      workingSet.onlyCountry = false;
       changeSet(europeCountries);
       workingSet.country = true;
 
@@ -498,7 +523,7 @@ function main() {
     });
 
   d3.select('#asiaButton').on('click', function () {
-
+      workingSet.onlyCountry = false;
       changeSet(asiaCountries);
       workingSet.country = true;
 
@@ -508,7 +533,7 @@ function main() {
     });
 
   d3.select('#africaButton').on('click', function () {
-
+      workingSet.onlyCountry = false;
       changeSet(africaCountries);
       workingSet.country = true;
 
@@ -518,7 +543,7 @@ function main() {
     });
 
   d3.select('#oceaniaButton').on('click', function () {
-
+      workingSet.onlyCountry = false;
       changeSet(oceaniaCountries);
       workingSet.country = true;
       update();
@@ -643,6 +668,9 @@ function main() {
       }
       if (workingSet.country) {
         document.getElementById("main-title").innerHTML = workingSet.currentRoot[0][0].continent + " " + workingSet.currentTag + " " + workingSet.currentDate ;
+      }
+      if (workingSet.onlyCountry) {
+        document.getElementById("main-title").innerHTML = "Top " + workingSet.currentRoot[0].country + " " + workingSet.currentTag + " " + workingSet.currentDate ;
       }
     }
 

@@ -167,7 +167,7 @@ body {
     padding-left: 150px;
 }
 #wrapper.active #sidebar-wrapper {
-    left: 150px;
+    left: 200px;
     width: 150px;
     transition: all .4s ease 0s;
 }
@@ -253,5 +253,10 @@ body {
   height: 100%;
   z-index: 9999;
   background: url('../Resources/loadingGif.gif') 50% 50% no-repeat rgb(249,249,249);
+}
+#worldButton, #naButton, #saButton, #euroButton, #africaButton, #asiaButton, #oceaniaButton{
+    width: 120px;
+    margin-left: 3px;
+    margin-top: 7px;
 }
 
