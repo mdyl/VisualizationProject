@@ -252,7 +252,27 @@ function main() {
      
        return false;
    }
-   //function searchKey()
+   function searchBoth(photoset, value, date){
+     value = value.toLowerCase();
+       for (var i in photoset) {  
+        if (photoset[i].userTags.length != 0){
+         for (j in photoset[i].userTags){
+            temp = photoset[i].userTags[j];
+            if(temp.toLowerCase() == value && photoset[i].dateTaken == String(date)){
+              return photoset[i];
+            }
+          }
+          for (var j = 0; j < photoset[i].machineTags.length ; j++){
+            temp = photoset[i].machineTags[j].tag;
+            if(temp.toLowerCase() == value && photoset[i].machineTags[j].confidence > .8 && photoset[i].dateTaken == String(date)){
+              return photoset[i];
+            }
+          }
+        }
+       }
+     
+       return false; //if there is no photo for that key
+   }
 
 
   function setRoot(fav){
