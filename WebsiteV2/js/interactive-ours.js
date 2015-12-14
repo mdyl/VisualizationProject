@@ -534,8 +534,19 @@ function main() {
     function update() {
       // everytime update() is called, we (re)compute the layout, using the
       // previously provided value function
+     /* if (root.children.length ==){
+         var div = d3.select("body").append("div")   
+          .attr("class", "tooltip")               
+          .style("opacity", 0);
+          div.transition()        
+                .duration(200)      
+                .style("opacity", .9);      
+            div .html("<b>Title:</b> " + d.title + "<br/>" + "<b>User:</b> " + d.user.nickname + "<br/>" + "<b>Date:</b> " + d.dateTaken + "<br/>"  + "<b>Description:</b> " + d.description)  
+                .style("left", (d3.event.pageX) + "px")     
+                .style("top", (d3.event.pageY - 28) + "px");   
 
- 
+      } */
+      if(root.children.length != 0){
       
       var laidOut = bubbleLayout.nodes(root);
       var node = svg.selectAll('.node').data(laidOut);
@@ -605,14 +616,14 @@ function main() {
                              .attr("preserveAspectRatio", "xMinYMin slice") ; //update photo url
       node.select('circle').style('fill', fill); //update background
       transition.select('text').attr('font-size', fontSize).text(nodeText);
-;
+
 
 
       // if some nodes are removed, you can use node.exit() to get a placeholder
       // to operate on them
         node.exit().remove();
 
-
+      }
     }
 
     update(); // on initial page loading, use update() to show the visualization
