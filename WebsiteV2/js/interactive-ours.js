@@ -105,7 +105,7 @@ function main() {
         if (d.isActive) {
           return '24pt';
         }
-        return '15pt';
+        return '12pt';
       }
     }
 
@@ -159,41 +159,51 @@ function main() {
     }
 
 
-    var increment = 1;
     function click(d) {
-      increment = increment + 1; 
+     // increment = increment + 1; 
+     if (workingSet.country == true){
+       window.open(d.downloadUrl);
+       return;
+     }
       switch(d.continent){
         case "Asia":
           changeSet(asiaCountries);
+          workingSet.country = true;
           update();
+
           break;
 
         case "North America":
           changeSet(northAmericanCountries);
+          workingSet.country = true;
           update();
           break;
 
         case "Europe":
           changeSet(europeCountries);
+          workingSet.country = true;
           update();
           break;
 
         case "Oceania":
           changeSet(oceaniaCountries);
+          workingSet.country = true;
           update();
           break;
 
         case "Africa":
           changeSet(africaCountries);
+          workingSet.country = true;
           update();
           break;
 
         case "South America":
           changeSet(southAmericanCountries);
+          workingSet.country = true;
           update();
           break;
+      
       }
-        workingSet.country = true;
 
 
     }
@@ -210,8 +220,6 @@ function main() {
     }
 
    function searchKey(photoset,value){
-    console.log(photoset.country + ": ")
-    console.log(photoset);
       value = value.toLowerCase();
        for (var i in photoset) {  
         if (photoset[i].userTags.length != 0){
@@ -221,11 +229,32 @@ function main() {
               return photoset[i];
             }
           }
+          for (var j = 0; j < photoset[i].machineTags.length ; j++){
+            temp = photoset[i].machineTags[j].tag;
+            if(temp.toLowerCase() == value && photoset[i].machineTags[j].confidence > .8){
+              return photoset[i];
+            }
+          }
         }
        }
      
        return false; //if there is no photo for that key
    }
+
+   function searchDate(photoset, date){
+       for (var i in photoset) {  
+         for (j in photoset[i].dateTaken){
+            temp = photoset[i].dateTaken[j];
+            if(temp == date){
+              return photoset[i];
+            }
+          }
+        
+       }
+     
+       return false;
+   }
+   //function searchKey()
 
 
   function setRoot(fav){
@@ -238,15 +267,22 @@ function main() {
       if (workingSet.tag){
         setRoot(searchSets(workingSet.currentTag));
       } else {
-          setRoot(getTop());
+        setRoot(getTop());
       }
    }
 
-   function searchSets(value){
+   function searchSets(val, date){
     //console.log(workingSet.currentRoot);
       newPhotoSets = [];
       for (var i in workingSet.currentRoot){
-        topPhoto = searchKey(workingSet.currentRoot[i],value);
+        if (workingSet.tag && !workingSet.date){
+          topPhoto = searchKey(workingSet.currentRoot[i],value);
+        } else if (!workingSet.tag && workingSet.date){
+          topPhoto = searchDate(workingSet.currentRoot[i],date);
+        } else if (workingSet.tag && workingSet.date){
+          topPhoto = searchBoth(workingSet.currentRoot[i],value, date);
+        }
+        console.log(topPhoto);
         if(topPhoto != false){ //so only countrys that have a photo are returned
          newPhotoSets.push(topPhoto);
         }
@@ -254,24 +290,33 @@ function main() {
       return newPhotoSets;
    }
 
-   //function searchDate()
-   //function searchKey()
 
 
 
  //seach function
   d3.select('#tagButton').on('click', function () {
      var val = document.getElementById("tagSearch").value;
-     var test = document.getElementById('searchdate').value;
+     var date = document.getElementById('searchdate').value;
 
      //new photos to populate the screen
-       workingSet.tag = true;
-       workingSet.currentTag = val;
-       newNodes = searchSets(val);
+     if (val != ""){
+        workingSet.tag = true;
+        workingSet.currentTag = val;
+     }
+     if (date != ""){
+        workingSet.date = true;
+        workingSet.currentDate = val;
+     }
+
+
+       newNodes = searchSets(val, date);
+
        setRoot(newNodes);
        update();
      
     });
+
+
 
   d3.select('#worldButton').on('click', function () {
       changeSet(photosByCont);
@@ -416,8 +461,10 @@ function main() {
 
     var workingSet = {
       tag: false,
+      date: false,
       country: false,
       currentTag: "",
+      currentDate: "",
       currentRoot: photosByCont,
     };
 
@@ -435,11 +482,12 @@ function main() {
         //
         // **we change the value instead of just scaling the <circle> element
         // because we want D3 to recompute the layout.**
-        return ((Number(photo.favorites)+1) * 3);
+        return ((Number(photo.favorites)+2) * 3);
       } else {
         return (Number(photo.favorites)+1);
       }
     });
+
 
 
 
@@ -454,7 +502,7 @@ function main() {
       // previously provided value function
 
  
-    
+      
       var laidOut = bubbleLayout.nodes(root);
       var node = svg.selectAll('.node').data(laidOut);
 
@@ -486,11 +534,7 @@ function main() {
       
       var circle = g.append('svg:circle');
       circle.attr('r', function(d) { return d.r; });
-      //circle.classed('node', true)
-      circle.style('fill', fill)
-            .style("fill-opacity", .5)
-            .on('mouseenter', function() {circle.transition().duration(500).style("fill-opacity", 1)} )
-            .on('mouseleave', function() {circle.transition().duration(500).style("fill-opacity", .5)} );
+      circle.style('fill', fill);
 
 
       g.on('mouseenter', mouseEnter);
@@ -504,9 +548,17 @@ function main() {
       text.text(nodeText);
       text.attr('font-family', 'Helvetica');
       text.attr('font-size', fontSize);
-      text.attr('font-color', 'white');
+      text.attr('fill', 'white');
       text.attr('text-anchor', 'middle');
       text.attr('dominant-baseline', 'middle');
+      //text.style('stroke', 'black');
+      //text.style('stroke-width', '1');
+      //text.style('stroke-linecap', 'round');
+      //text.style('stroke-linejoin', 'miter');
+      //text.style('stroke-location', 'outside');
+
+       
+   
 
 
       // deal with existing nodes:
