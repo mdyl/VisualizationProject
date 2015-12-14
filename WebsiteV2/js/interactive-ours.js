@@ -275,9 +275,7 @@ function main() {
 
   d3.select('#worldButton').on('click', function () {
 
-      root.children = [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]];
-      workingSet.currentRoot = photosByCont;
-
+      changeSet(photosByCont);
       update();
 
 
@@ -285,9 +283,7 @@ function main() {
 
   d3.select('#naButton').on('click', function () {
 
-      root.children = [northAmericanCountries];
-      workingSet.currentRoot = northAmericanCountries;
-
+      changeSet(northAmericanCountries);
       update();
 
 
@@ -295,9 +291,7 @@ function main() {
 
   d3.select('#saButton').on('click', function () {
 
-      root.children = [southAmericanCountries];
-      workingSet.currentRoot = photosByCont;
-
+      changeSet(southAmericanCountries);
       update();
 
 
@@ -305,9 +299,7 @@ function main() {
 
   d3.select('#euroButton').on('click', function () {
 
-      root.children = [europeCountries];
-      workingSet.currentRoot = photosByCont;
-
+      changeSet(europeCountries);
       update();
 
 
@@ -315,9 +307,7 @@ function main() {
 
   d3.select('#asiaButton').on('click', function () {
 
-      root.children = [asiaCountries];
-      workingSet.currentRoot = photosByCont;
-
+      changeSet(asiaCountries);
       update();
 
 
@@ -325,9 +315,7 @@ function main() {
 
   d3.select('#africaButton').on('click', function () {
 
-      root.children = [africaCountries];
-      workingSet.currentRoot = photosByCont;
-
+      changeSet(africaCountries);
       update();
 
 
@@ -335,9 +323,7 @@ function main() {
 
   d3.select('#oceaniaButton').on('click', function () {
 
-      root.children = [oceaniaCountries];
-      workingSet.currentRoot = photosByCont;
-
+      changeSet(oceaniaCountries);
       update();
 
 
@@ -401,7 +387,7 @@ function main() {
           }
         });
           //sorted countries of Africa
-          var africaContries = sortContinents(africaPhotos);
+          var africaCountries = sortContinents(africaPhotos);
           photosByCont.push(africaCountries);
 
         var oceaniaPhotos = photos.filter(function (row) {
@@ -412,7 +398,7 @@ function main() {
           }
         });
    //sorted countries of Oceania
-        var oceaniaContries = sortContinents(oceaniaPhotos);
+        var oceaniaCountries = sortContinents(oceaniaPhotos);
         photosByCont.push(oceaniaPhotos);
 
     var root = {
