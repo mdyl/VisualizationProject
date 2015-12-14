@@ -332,6 +332,7 @@ function main() {
 
      }else{
         workingSet.tag = false;
+        workingSet.currentTag = "";
      }
      if (date != ""){
         workingSet.date = true;
@@ -339,7 +340,7 @@ function main() {
 
      }else {
         workingSet.date = false;
-
+        workingSet.currentDate = "";
      }
 
 
@@ -497,6 +498,7 @@ function main() {
       tag: false,
       date: false,
       country: false,
+      onlyCountry: false,
       currentTag: "",
       currentDate: "",
       currentRoot: photosByCont,
@@ -523,30 +525,25 @@ function main() {
     });
 
 
+    function updateTitle(){
+      if(!workingSet.country) {
+         document.getElementById("main-title").innerHTML = "World" + " " + workingSet.currentTag + " " + workingSet.currentDate ;
+      }
+      if (workingSet.country) {
+        document.getElementById("main-title").innerHTML = workingSet.currentRoot[0][0].continent + " " + workingSet.currentTag + " " + workingSet.currentDate ;
 
+      }
+    }
 
      var div = d3.select("body").append("div")   
           .attr("class", "tooltip")               
           .style("opacity", 0);
 
 
-
     function update() {
       // everytime update() is called, we (re)compute the layout, using the
       // previously provided value function
-     /* if (root.children.length ==){
-         var div = d3.select("body").append("div")   
-          .attr("class", "tooltip")               
-          .style("opacity", 0);
-          div.transition()        
-                .duration(200)      
-                .style("opacity", .9);      
-            div .html("<b>Title:</b> " + d.title + "<br/>" + "<b>User:</b> " + d.user.nickname + "<br/>" + "<b>Date:</b> " + d.dateTaken + "<br/>"  + "<b>Description:</b> " + d.description)  
-                .style("left", (d3.event.pageX) + "px")     
-                .style("top", (d3.event.pageY - 28) + "px");   
-
-      } */
-      if(root.children.length != 0){
+      updateTitle();
       
       var laidOut = bubbleLayout.nodes(root);
       var node = svg.selectAll('.node').data(laidOut);
@@ -623,7 +620,7 @@ function main() {
       // to operate on them
         node.exit().remove();
 
-      }
+      
     }
 
     update(); // on initial page loading, use update() to show the visualization
