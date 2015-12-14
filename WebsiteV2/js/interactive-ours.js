@@ -93,6 +93,9 @@ function main() {
         if (d.isActive) {
           return d.title;
         }
+        if(workingSet.country){
+          return d.country;
+        }
         return d.continent;
       }
     }
@@ -147,7 +150,6 @@ function main() {
         } 
         if (newCountry){
           var temp = new Array(continent[i]);
-        //  console.log("Added New Country: " + continent[i].country);
           orderedCountryByContinent.push(temp);
         }
 
@@ -156,47 +158,43 @@ function main() {
       return orderedCountryByContinent;
     }
 
+
     var increment = 1;
     function click(d) {
       increment = increment + 1; 
       switch(d.continent){
         case "Asia":
-          workingSet.currentRoot = asiaCountries;
-                    changeSet();
+          changeSet(asiaCountries);
           update();
           break;
 
         case "North America":
-          workingSet.currentRoot = northAmericanCountries;
-                    changeSet();
+          changeSet(northAmericanCountries);
           update();
           break;
 
         case "Europe":
-          workingSet.currentRoot = europeCountries;
-                    changeSet();
+          changeSet(europeCountries);
           update();
           break;
 
         case "Oceania":
-          workingSet.currentRoot = oceaniaCountries;
-                    changeSet();
+          changeSet(oceaniaCountries);
           update();
           break;
 
         case "Africa":
-          workingSet.currentRoot = africaCountries;
-                    changeSet();
+          changeSet(africaCountries);
           update();
           break;
 
         case "South America":
-         // setRoot(southAmericaPhotos.slice(1 * increment,10 * increment));
-          workingSet.currentRoot = southAmericanCountries;
-                    changeSet();
+          changeSet(southAmericanCountries);
           update();
           break;
       }
+        workingSet.country = true;
+
 
     }
 
@@ -233,7 +231,9 @@ function main() {
     root.children = fav;
    }
 
-   function changeSet(){
+   function changeSet(set){
+   workingSet.currentRoot = set;
+
       if (workingSet.tag){
         setRoot(searchSets(workingSet.currentTag));
       } else {
@@ -423,6 +423,7 @@ function main() {
 
     var workingSet = {
       tag: false,
+      country: false,
       currentTag: "",
       currentRoot: photosByCont,
     };
@@ -452,6 +453,8 @@ function main() {
      var div = d3.select("body").append("div")   
           .attr("class", "tooltip")               
           .style("opacity", 0);
+
+
 
     function update() {
       // everytime update() is called, we (re)compute the layout, using the
@@ -491,7 +494,10 @@ function main() {
       var circle = g.append('svg:circle');
       circle.attr('r', function(d) { return d.r; });
       //circle.classed('node', true)
-      circle.style('fill', fill);
+      circle.style('fill', fill)
+            .style("fill-opacity", .5)
+            .on('mouseenter', function() {circle.transition().duration(500).style("fill-opacity", 1)} )
+            .on('mouseleave', function() {circle.transition().duration(500).style("fill-opacity", .5)} );
 
 
       g.on('mouseenter', mouseEnter);
@@ -505,6 +511,7 @@ function main() {
       text.text(nodeText);
       text.attr('font-family', 'Helvetica');
       text.attr('font-size', fontSize);
+      text.attr('font-color', 'white');
       text.attr('text-anchor', 'middle');
       text.attr('dominant-baseline', 'middle');
 
