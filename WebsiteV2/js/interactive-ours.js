@@ -130,13 +130,6 @@ function main() {
       }
     }
 
-    function worldButton(){
-      root.children = [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]];
-      workingSet.currentRoot = photosByCont;
-
-      update();
-    }
-
     function sortContinents(continent){
       var orderedCountryByContinent = new Array([]);
       orderedCountryByContinent[0][0] = continent[0];
@@ -281,14 +274,68 @@ function main() {
     });
 
   d3.select('#worldButton').on('click', function () {
-    // var val = document.getElementById("tagSearch").value;
-
-     //new photos to populate the screen
-
-       //newNodes = searchSets(val);
-      // setRoot(newNodes);
 
       root.children = [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]];
+      workingSet.currentRoot = photosByCont;
+
+      update();
+
+
+    });
+
+  d3.select('#naButton').on('click', function () {
+
+      root.children = [northAmericanCountries];
+      workingSet.currentRoot = northAmericanCountries;
+
+      update();
+
+
+    });
+
+  d3.select('#saButton').on('click', function () {
+
+      root.children = [southAmericanCountries];
+      workingSet.currentRoot = photosByCont;
+
+      update();
+
+
+    });
+
+  d3.select('#euroButton').on('click', function () {
+
+      root.children = [europeCountries];
+      workingSet.currentRoot = photosByCont;
+
+      update();
+
+
+    });
+
+  d3.select('#asiaButton').on('click', function () {
+
+      root.children = [asiaCountries];
+      workingSet.currentRoot = photosByCont;
+
+      update();
+
+
+    });
+
+  d3.select('#africaButton').on('click', function () {
+
+      root.children = [africaCountries];
+      workingSet.currentRoot = photosByCont;
+
+      update();
+
+
+    });
+
+  d3.select('#oceaniaButton').on('click', function () {
+
+      root.children = [oceaniaCountries];
       workingSet.currentRoot = photosByCont;
 
       update();
