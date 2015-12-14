@@ -133,13 +133,6 @@ function main() {
       }
     }
 
-    function worldButton(){
-      root.children = [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]];
-      workingSet.currentRoot = photosByCont;
-
-      update();
-    }
-
     function sortContinents(continent){
       var orderedCountryByContinent = new Array([]);
       orderedCountryByContinent[0][0] = continent[0];
@@ -216,6 +209,24 @@ function main() {
       return newPhotoSets;
     }
 
+   function searchKey(photoset,value){
+      increment = 1;
+      value = value.toLowerCase();
+       for (var i in photoset) {  
+        if (photoset[i].userTags.length != undefined){
+         for (j in photoset[i].userTags){
+            temp = photoset[i].userTags[j];
+            if(temp.toLowerCase() == value){
+              return photoset[i];
+            }
+          }
+        }
+       }
+     
+       return false; //if there is no photo for that key
+   }
+
+
   function setRoot(fav){
     root.children = fav;
    }
@@ -233,7 +244,7 @@ function main() {
    function searchSets(value){
       newPhotoSets = [];
       for (var i in workingSet.currentRoot){
-        topPhoto = searchUserTag(workingSet.currentRoot[i],value);
+        topPhoto = searchKey(workingSet.currentRoot[i],value);
         if(topPhoto != false){ //so only countrys that have a photo are returned
          newPhotoSets.push(topPhoto);
         }
@@ -241,37 +252,7 @@ function main() {
       return newPhotoSets;
    }
 
-  function searchUserTag(photoset,value){
-      value = value.toLowerCase();
-       for (var i in photoset) {  
-        if (photoset[i].userTags.length != undefined){
-         for (j in photoset[i].userTags){
-            temp = photoset[i].userTags[j];
-            if(temp.toLowerCase() == value){
-              return photoset[i];
-            }
-          }
-        }
-       }
-     
-       return false; //if there is no photo for that key
-   }
-
-   function searchDate(value){
-       value = value.toLowerCase();
-       for (var i in photoset) {  
-        if (photoset[i].userTags.length != undefined){
-         for (j in photoset[i].userTags){
-            temp = photoset[i].userTags[j];
-            if(temp.toLowerCase() == value){
-              return photoset[i];
-            }
-          }
-        }
-       }
-     
-       return false; //if there is no photo for that key
-   }
+   //function searchDate()
    //function searchKey()
 
 
@@ -293,15 +274,66 @@ function main() {
     });
 
   d3.select('#worldButton').on('click', function () {
-    // var val = document.getElementById("tagSearch").value;
+      changeSet(photosByCont);
+      workingSet.country = false;
+      update();
+    });
 
-     //new photos to populate the screen
+  d3.select('#naButton').on('click', function () {
 
-       //newNodes = searchSets(val);
-      // setRoot(newNodes);
+      changeSet(northAmericanCountries);     
+       workingSet.country = true;
 
-      root.children = [northAmericaPhotos[0], southAmericaPhotos[0], asiaPhotos[0], africaPhotos[0], europePhotos[0], oceaniaPhotos[0]];
-      workingSet.currentRoot = photosByCont;
+      update();
+
+
+    });
+
+  d3.select('#saButton').on('click', function () {
+
+      changeSet(southAmericanCountries);
+      workingSet.country = true;
+
+      update();
+
+
+    });
+
+  d3.select('#euroButton').on('click', function () {
+
+      changeSet(europeCountries);
+      workingSet.country = true;
+
+      update();
+
+
+    });
+
+  d3.select('#asiaButton').on('click', function () {
+
+      changeSet(asiaCountries);
+      workingSet.country = true;
+
+      update();
+
+
+    });
+
+  d3.select('#africaButton').on('click', function () {
+
+      changeSet(africaCountries);
+      workingSet.country = true;
+
+      update();
+
+
+    });
+
+  d3.select('#oceaniaButton').on('click', function () {
+
+      changeSet(oceaniaCountries);
+      workingSet.country = true;
+
       update();
 
 
@@ -459,8 +491,9 @@ function main() {
       circle.attr('r', function(d) { return d.r; });
       //circle.classed('node', true)
       circle.style('fill', fill)
-            .on('mouseenter', function(d) {if (d.isActive = false) { circle.transition().duration(500).style("fill-opacity", .5); }} )
-            .on('mouseleave', function() {circle.transition().duration(500).style("fill-opacity", 1); } ); 
+            .style("fill-opacity", .5)
+            .on('mouseenter', function() {circle.transition().duration(500).style("fill-opacity", 1)} )
+            .on('mouseleave', function() {circle.transition().duration(500).style("fill-opacity", .5)} );
 
 
       g.on('mouseenter', mouseEnter);
