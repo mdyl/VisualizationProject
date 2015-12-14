@@ -54,7 +54,7 @@ function main() {
 
 
 
-  d3.text('Resources/updatedJSONV3.json', function(err, content) {
+  d3.text('Resources/updatedJSONV4.json', function(err, content) {
     if (err) {
       console.error(err);
       return;
@@ -267,6 +267,7 @@ function main() {
  //seach function
   d3.select('#tagButton').on('click', function () {
      var val = document.getElementById("tagSearch").value;
+     var test = document.getElementById('searchdate').value;
 
      //new photos to populate the screen
        workingSet.tag = true;
