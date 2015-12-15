@@ -98,7 +98,7 @@ function main() {
           return d.country;
         }
         if(workingSet.onlyCountry){
-          return d.favorites;
+          return "Favorites: " + d.favorites;
         }
         return d.continent;
       }
