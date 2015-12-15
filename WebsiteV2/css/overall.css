@@ -254,9 +254,20 @@ body {
   z-index: 9999;
   background: url('../Resources/loadingGif.gif') 50% 50% no-repeat rgb(249,249,249);
 }
-#worldButton, #naButton, #saButton, #euroButton, #africaButton, #asiaButton, #oceaniaButton{
+#world-back, #worldButton, #naButton, #saButton, #euroButton, #africaButton, #asiaButton, #oceaniaButton{
     width: 120px;
     margin-left: 3px;
     margin-top: 7px;
 }
 
+#h1-about, #p-about{
+  color: white;
+}
+
+#world-back{
+  left: 5px;
+  position: fixed;
+  float: left;
+  margin-right: 10px;
+
+}
